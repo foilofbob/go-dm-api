@@ -1,3 +1,5 @@
+# Copy this as config.yml and supply the DB password
+
 # Server configurations
 server:
   host: "localhost"
