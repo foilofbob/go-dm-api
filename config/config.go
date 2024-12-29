@@ -20,6 +20,8 @@ type Server struct {
 type Database struct {
 	Username string `yaml:"user"`
 	Password string `yaml:"pass"`
+	DB       string `yaml:"db"`
+	Driver   string `yaml:"driver"`
 }
 
 var currentConfig = Config{
@@ -30,6 +32,8 @@ var currentConfig = Config{
 	Database: Database{
 		Username: "db",
 		Password: "pass",
+		DB:       "dm_campaign_manager",
+		Driver:   "mysql",
 	},
 }
 
@@ -49,4 +53,12 @@ func InitConfig() {
 
 func Cfg() Config {
 	return currentConfig
+}
+
+func DBDriver() string {
+	return currentConfig.Database.Driver
+}
+
+func DBConnectString() string {
+	return currentConfig.Database.Username + ":" + currentConfig.Database.Password + "@/" + currentConfig.Database.DB
 }

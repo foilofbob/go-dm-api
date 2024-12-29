@@ -9,3 +9,5 @@ server:
 database:
   user: "dm_tool"
   pass: "PASSWORD"
+  db: "dm_campaign_manager"
+  driver: "mysql"
