@@ -1,37 +1,29 @@
 package domain
 
-import (
-	"database/sql"
-)
-
 type Campaign struct {
 	ID              int
 	Name            string
 	CurrentPlayerXP int
 }
 
-func GetCampaign(db *sql.DB, id int) (*Campaign, error) {
-	query := "SELECT * FROM campaign WHERE id = ?"
-	row := db.QueryRow(query, id)
-
+func GetCampaign(id int) (*Campaign, error) {
+	row := GetByID("campaign", id)
 	campaign := &Campaign{}
-	err := row.Scan(&campaign.ID, &campaign.Name, &campaign.CurrentPlayerXP)
-	if err != nil {
-		return nil, err
+	readErr := row.Scan(&campaign.ID, &campaign.Name, &campaign.CurrentPlayerXP)
+	if readErr != nil {
+		return nil, readErr
 	}
 	return campaign, nil
 }
 
-func ListCampaigns(db *sql.DB) ([]Campaign, error) {
-	query := "SELECT * FROM campaign"
-	rows, err := db.Query(query)
+func ListCampaigns() ([]Campaign, error) {
+	rows, err := GetAll("campaign")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	var campaigns []Campaign
-	
 	for rows.Next() {
 		var campaign Campaign
 
@@ -47,4 +39,13 @@ func ListCampaigns(db *sql.DB) ([]Campaign, error) {
 	}
 
 	return campaigns, nil
+}
+
+func CreateCampaign(name string) error {
+	query := "INSERT INTO campaign (name, current_player_xp) VALUES (?, 0)"
+	_, insertErr := DBExec(query, name)
+	if insertErr != nil {
+		return insertErr
+	}
+	return nil
 }
