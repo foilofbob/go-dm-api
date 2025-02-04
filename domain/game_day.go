@@ -9,6 +9,16 @@ type GameDay struct {
 	Year       int
 }
 
+func GetGameDay(id int) (*GameDay, error) {
+	row := GetByID("game_day", id)
+	gameDay := &GameDay{}
+	readErr := row.Scan(&gameDay.ID, &gameDay.CampaignID, &gameDay.InGameDay, &gameDay.Day, &gameDay.Month, &gameDay.Year)
+	if readErr != nil {
+		return nil, readErr
+	}
+	return gameDay, nil
+}
+
 func GetGameDays(campaignId int) ([]GameDay, error) {
 	query := "SELECT * FROM game_day WHERE campaign_id = ? ORDER BY in_game_day DESC"
 	rows, err := DBQuery(query, campaignId)
@@ -37,14 +47,35 @@ func GetGameDays(campaignId int) ([]GameDay, error) {
 
 }
 
-func CreateGameDay(campaignID int, inGameDay int, day int, month int, year int) error {
+func GetMostRecentGameDay(campaignId int) (*GameDay, error) {
+	db := DBConnection()
+	defer db.Close()
+
+	query := "SELECT * FROM game_day WHERE campaign_id = ? ORDER BY in_game_day DESC limit 1"
+	row := db.QueryRow(query, campaignId)
+	gameDay := &GameDay{}
+
+	readErr := row.Scan(&gameDay.ID, &gameDay.CampaignID, &gameDay.InGameDay, &gameDay.Day, &gameDay.Month, &gameDay.Year)
+	if readErr != nil {
+		return nil, readErr
+	}
+	return gameDay, nil
+}
+
+func CreateGameDay(campaignID int, inGameDay int, day int, month int, year int) (*GameDay, error) {
 	db := DBConnection()
 	defer db.Close()
 
 	query := "INSERT INTO game_day (campaign_id, in_game_day, day, month, year) VALUES (?, ?, ?, ?, ?)"
-	_, insertErr := db.Exec(query, campaignID, inGameDay, day, month, year)
+	res, insertErr := db.Exec(query, campaignID, inGameDay, day, month, year)
 	if insertErr != nil {
-		return insertErr
+		return nil, insertErr
 	}
-	return nil
+
+	lid, err := res.LastInsertId()
+	if err != nil {
+		return nil, insertErr
+	}
+
+	return GetGameDay(int(lid))
 }

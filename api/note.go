@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"go_dm_api/domain"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -26,6 +27,8 @@ func GetNoteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetNotesHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Fetching notes")
+
 	vars := mux.Vars(r)
 	campaignIdStr := vars["campaignId"]
 	referenceType := vars["referenceType"]
@@ -42,15 +45,63 @@ func GetNotesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostNoteHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		StandardResponse(w, nil)
+		return
+	}
+	enableCORS(&w)
+
 	var note domain.Note
 	json.NewDecoder(r.Body).Decode(&note)
 
-	err := domain.CreateNote(note.CampaignID, note.ReferenceType, note.ReferenceID, note.Category, note.Title, note.Content)
+	newNote, err := domain.CreateNote(note.CampaignID, note.ReferenceType, note.ReferenceID, note.Category, note.Title, note.Content)
 	if err != nil {
-		http.Error(w, "Failed to create note", http.StatusInternalServerError)
+		http.Error(w, "Failed to create note: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintln(w, "Campaign created successfully")
+	StandardResponse(w, newNote)
+}
+
+func PutNoteHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		StandardResponse(w, nil)
+		return
+	}
+	enableCORS(&w)
+
+	var note domain.Note
+	json.NewDecoder(r.Body).Decode(&note)
+
+	updatedNote, err := domain.UpdateNote(note.ID, note.Category.String, note.Title, note.Content)
+	if err != nil {
+		http.Error(w, "Failed to update note: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	StandardResponse(w, updatedNote)
+}
+
+func DeleteNoteHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		StandardResponse(w, nil)
+		return
+	}
+	enableCORS(&w)
+
+	vars := mux.Vars(r)
+	idStr := vars["noteId"]
+	noteID, _ := strconv.Atoi(idStr)
+
+	println("Deleting note: " + idStr)
+
+	err := domain.DeleteNote(noteID)
+	if err != nil {
+		http.Error(w, "Failed to delete note: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }

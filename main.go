@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "github.com/go-sql-driver/mysql"
+	//"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"go_dm_api/api"
 	"go_dm_api/config"
@@ -23,11 +24,13 @@ func main() {
 
 	// GameDay routes
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/gameday", api.GetGameDaysHandler).Methods("GET")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/gameday", api.PostGameDayHandler).Methods("POST")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/gameday", api.PostGameDayHandler).Methods("POST", "OPTIONS")
 
 	// Note routes
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/note/{referenceType}", api.GetNotesHandler).Methods("GET")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/note", api.PostNoteHandler).Methods("POST")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/note", api.PostNoteHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/note/{noteId:[0-9]+}", api.PutNoteHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/note/{noteId:[0-9]+}", api.DeleteNoteHandler).Methods("DELETE", "OPTIONS")
 
 	// Start the HTTP server
 	log.Println("Server listening on :" + config.Cfg().Server.Port)

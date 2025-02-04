@@ -1,13 +1,15 @@
 package domain
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 type Note struct {
 	ID            int
 	CampaignID    int
 	ReferenceType string
 	ReferenceID   int
-	Category      sql.NullString // TODO: marshaller to handle this
+	Category      sql.NullString
 	Title         string
 	Content       string
 }
@@ -22,9 +24,9 @@ func GetNote(id int) (*Note, error) {
 	return note, nil
 }
 
-func GetNotes(campaignId int, referenceType string) ([]Note, error) {
+func GetNotes(campaignID int, referenceType string) ([]Note, error) {
 	query := "SELECT * FROM note WHERE campaign_id = ? AND reference_type = ?"
-	rows, err := DBQuery(query, campaignId, referenceType)
+	rows, err := DBQuery(query, campaignID, referenceType)
 	if err != nil {
 		return nil, err
 	}
@@ -46,17 +48,50 @@ func GetNotes(campaignId int, referenceType string) ([]Note, error) {
 	}
 
 	return notes, nil
-
 }
 
-func CreateNote(campaignID int, referenceType string, referenceID int, category sql.NullString, title string, content string) error {
+func CreateNote(campaignID int, referenceType string, referenceID int, category sql.NullString, title string, content string) (*Note, error) {
 	db := DBConnection()
 	defer db.Close()
 
 	query := "INSERT INTO note (campaign_id, reference_type, reference_id, category, title, content) VALUES (?, ?, ?, ?, ?, ?)"
-	_, insertErr := db.Exec(query, campaignID, referenceType, referenceID, category, title, content)
+	res, insertErr := db.Exec(query, campaignID, referenceType, referenceID, category, title, content)
 	if insertErr != nil {
-		return insertErr
+		return nil, insertErr
 	}
-	return nil
+
+	lid, err := res.LastInsertId()
+	if err != nil {
+		return nil, insertErr
+	}
+
+	return GetNote(int(lid))
+}
+
+func UpdateNote(noteID int, category string, title string, content string) (*Note, error) {
+	db := DBConnection()
+	defer db.Close()
+
+	query := "UPDATE note SET category = ?, title = ?, content = ? WHERE id = ?"
+	_, updateErr := db.Exec(query, category, title, content, noteID)
+	if updateErr != nil {
+		return nil, updateErr
+	}
+	return GetNote(noteID)
+}
+
+func DeleteNote(noteID int) error {
+	db := DBConnection()
+	defer db.Close()
+
+	query := "DELETE FROM note WHERE id = ?"
+	res, deleteErr := db.Exec(query, noteID)
+
+	if deleteErr != nil {
+		println("Deleted note error: " + deleteErr.Error())
+	}
+
+	println(res.RowsAffected())
+
+	return deleteErr
 }

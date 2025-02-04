@@ -22,3 +22,5 @@ Start the API: `go run main.go`
 Exercise it with curl: `curl http://localhost:8090/note/1`
 
 For hot reloading you can run it with: `air` (see [air](https://github.com/air-verse/air))
+
+Install with: `go install github.com/air-verse/air@latest`

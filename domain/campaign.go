@@ -1,15 +1,16 @@
 package domain
 
 type Campaign struct {
-	ID              int
-	Name            string
-	CurrentPlayerXP int
+	ID                int
+	Name              string
+	CampaignSettingID int
+	CurrentPlayerXP   int
 }
 
 func GetCampaign(id int) (*Campaign, error) {
 	row := GetByID("campaign", id)
 	campaign := &Campaign{}
-	readErr := row.Scan(&campaign.ID, &campaign.Name, &campaign.CurrentPlayerXP)
+	readErr := row.Scan(&campaign.ID, &campaign.Name, &campaign.CurrentPlayerXP, &campaign.CampaignSettingID)
 	if readErr != nil {
 		return nil, readErr
 	}
@@ -27,7 +28,7 @@ func ListCampaigns() ([]Campaign, error) {
 	for rows.Next() {
 		var campaign Campaign
 
-		if err := rows.Scan(&campaign.ID, &campaign.Name, &campaign.CurrentPlayerXP); err != nil {
+		if err := rows.Scan(&campaign.ID, &campaign.Name, &campaign.CurrentPlayerXP, &campaign.CampaignSettingID); err != nil {
 			return campaigns, err
 		}
 
@@ -41,9 +42,9 @@ func ListCampaigns() ([]Campaign, error) {
 	return campaigns, nil
 }
 
-func CreateCampaign(name string) error {
-	query := "INSERT INTO campaign (name, current_player_xp) VALUES (?, 0)"
-	_, insertErr := DBExec(query, name)
+func CreateCampaign(name string, campaignSettingID int) error {
+	query := "INSERT INTO campaign (name, current_player_xp, campaign_setting_id) VALUES (?, 0, ?)"
+	_, insertErr := DBExec(query, name, campaignSettingID)
 	if insertErr != nil {
 		return insertErr
 	}
