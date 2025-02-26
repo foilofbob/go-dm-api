@@ -10,13 +10,15 @@ import (
 )
 
 type completeCampaign struct {
-	Campaign domain.Campaign
-	Months   []domain.Month
-	WeekDays []domain.WeekDay
+	Campaign             domain.Campaign
+	Months               []domain.Month
+	WeekDays             []domain.WeekDay
+	CalendarCycles       []domain.CalendarCycle
+	CalendarCycleOffsets []domain.CampaignCalendarCycleOffset
+	CalendarEvents       []domain.CalendarEvent
 }
 
 func GetCampaignHandler(w http.ResponseWriter, r *http.Request) {
-	// Get the 'id' parameter from the URL
 	vars := mux.Vars(r)
 	idStr := vars["id"]
 
@@ -24,23 +26,41 @@ func GetCampaignHandler(w http.ResponseWriter, r *http.Request) {
 
 	campaign, err := domain.GetCampaign(campaignId)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error fetching campaign: %s", err.Error()), http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("Error fetching campaign: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
 
 	months, err := domain.GetMonths(campaign.CampaignSettingID)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error fetching campaign months: %s", err.Error()), http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("Error fetching campaign months: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
 
 	weekDays, err := domain.GetWeekDays(campaign.CampaignSettingID)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error fetching campaign week days: %s", err.Error()), http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("Error fetching campaign week days: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
 
-	StandardResponse(w, completeCampaign{Campaign: *campaign, Months: months, WeekDays: weekDays})
+	calendarCycles, err := domain.GetCalendarCycles(campaign.CampaignSettingID)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error fetching campaign calendar cycles: %s", err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	calendarCycleOffsets, err := domain.GetCalendarCycleOffsets(campaign.ID)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error fetching campaign calendar cycle offsets: %s", err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	calendarEvents, err := domain.GetCalendarEvents(campaign.ID)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error fetching campaign calendar events: %s", err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	StandardResponse(w, completeCampaign{Campaign: *campaign, Months: months, WeekDays: weekDays, CalendarCycles: calendarCycles, CalendarCycleOffsets: calendarCycleOffsets, CalendarEvents: calendarEvents})
 }
 
 func ListCampaignHandler(w http.ResponseWriter, _ *http.Request) {
