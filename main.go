@@ -32,6 +32,9 @@ func main() {
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/note/{noteId:[0-9]+}", api.PutNoteHandler).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/note/{noteId:[0-9]+}", api.DeleteNoteHandler).Methods("DELETE", "OPTIONS")
 
+	// Players
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/players", api.GetPlayersHandler).Methods("GET")
+
 	// Start the HTTP server
 	log.Println("Server listening on :" + config.Cfg().Server.Port)
 	log.Fatal(http.ListenAndServe(":"+config.Cfg().Server.Port, r))

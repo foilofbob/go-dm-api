@@ -44,7 +44,6 @@ func GetGameDays(campaignId int) ([]GameDay, error) {
 	}
 
 	return gameDays, nil
-
 }
 
 func GetMostRecentGameDay(campaignId int) (*GameDay, error) {
