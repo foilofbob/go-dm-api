@@ -11,7 +11,6 @@ type Player struct {
 	PassivePerception int
 	Languages         string
 	Movement          int
-	Misc              string
 }
 
 func GetPlayers(campaignId int) ([]Player, error) {
@@ -27,7 +26,7 @@ func GetPlayers(campaignId int) ([]Player, error) {
 	for rows.Next() {
 		var player Player
 
-		if err := rows.Scan(&player.ID, &player.CampaignID, &player.Name, &player.Race, &player.Class, &player.ArmorClass, &player.HitPoints, &player.PassivePerception, &player.Languages, &player.Movement, &player.Misc); err != nil {
+		if err := rows.Scan(&player.ID, &player.CampaignID, &player.Name, &player.Race, &player.Class, &player.ArmorClass, &player.HitPoints, &player.PassivePerception, &player.Languages, &player.Movement); err != nil {
 			return players, err
 		}
 

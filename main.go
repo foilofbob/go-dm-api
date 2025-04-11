@@ -34,6 +34,14 @@ func main() {
 
 	// Players
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/players", api.GetPlayersHandler).Methods("GET")
+	// TODO: Add Player
+	// TODO: Delete Player
+
+	// Items
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/items", api.GetItemsHandler).Methods("GET")
+	// TODO: Add Item
+	// TODO: Delete Item
+	// TODO: Assign Item to Player
 
 	// Start the HTTP server
 	log.Println("Server listening on :" + config.Cfg().Server.Port)

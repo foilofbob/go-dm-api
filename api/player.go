@@ -9,13 +9,10 @@ import (
 )
 
 func GetPlayersHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("In fetch...")
 	vars := mux.Vars(r)
 	campaignIdStr := vars["campaignId"]
 
 	campaignId, err := strconv.Atoi(campaignIdStr)
-
-	fmt.Println("Campaign" + campaignIdStr)
 
 	players, err := domain.GetPlayers(campaignId)
 	if err != nil {
