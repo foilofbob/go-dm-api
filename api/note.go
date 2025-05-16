@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"go_dm_api/domain"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -27,8 +26,6 @@ func GetNoteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetNotesHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Fetching notes")
-
 	vars := mux.Vars(r)
 	campaignIdStr := vars["campaignId"]
 	referenceType := vars["referenceType"]
@@ -94,8 +91,6 @@ func DeleteNoteHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr := vars["noteId"]
 	noteID, _ := strconv.Atoi(idStr)
-
-	println("Deleting note: " + idStr)
 
 	err := domain.DeleteNote(noteID)
 	if err != nil {

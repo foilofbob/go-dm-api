@@ -39,9 +39,9 @@ func main() {
 
 	// Items
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/items", api.GetItemsHandler).Methods("GET")
-	// TODO: Add Item
-	// TODO: Delete Item
-	// TODO: Assign Item to Player
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/item", api.PostItemHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/item/{itemId:[0-9]+}", api.PutItemHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/item/{itemId:[0-9]+}", api.DeleteItemHandler).Methods("DELETE", "OPTIONS")
 
 	// Start the HTTP server
 	log.Println("Server listening on :" + config.Cfg().Server.Port)
