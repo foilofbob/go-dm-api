@@ -34,8 +34,9 @@ func main() {
 
 	// Players
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/players", api.GetPlayersHandler).Methods("GET")
-	// TODO: Add Player
-	// TODO: Delete Player
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/player", api.PostPlayerHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/player/{playerId:[0-9]+}", api.PutPlayerHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/player/{playerId:[0-9]+}", api.DeletePlayerHandler).Methods("DELETE", "OPTIONS")
 
 	// Items
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/items", api.GetItemsHandler).Methods("GET")

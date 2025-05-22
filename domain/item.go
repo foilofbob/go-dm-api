@@ -88,7 +88,7 @@ func DeleteItem(itemID int) error {
 	res, deleteErr := db.Exec(query, itemID)
 
 	if deleteErr != nil {
-		println("Deleted item error: " + deleteErr.Error())
+		println("Delete item error: " + deleteErr.Error())
 	}
 
 	println(res.RowsAffected())
