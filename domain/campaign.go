@@ -1,5 +1,9 @@
 package domain
 
+import (
+	"math"
+)
+
 type Campaign struct {
 	ID                int
 	Name              string
@@ -49,4 +53,34 @@ func CreateCampaign(name string, campaignSettingID int) error {
 		return insertErr
 	}
 	return nil
+}
+
+func UpdateCurrentPlayerXP(campaignID int, experience int) (int, error) {
+	campaign, err := GetCampaign(campaignID)
+	if err != nil {
+		return -1, err
+	}
+
+	if campaign == nil {
+		return -1, err
+	}
+
+	players, err := GetPlayers(campaignID)
+	if err != nil {
+		return -1, err
+	}
+
+	avgXP := float64(experience)
+	if playerCount := len(players); playerCount > 1 {
+		avgXP = math.Round(avgXP / float64(playerCount))
+	}
+	newXP := campaign.CurrentPlayerXP + int(avgXP)
+
+	query := "UPDATE campaign SET current_player_xp = ? where id = ?"
+	_, updateErr := DBExec(query, newXP, campaignID)
+	if updateErr != nil {
+		return -1, updateErr
+	}
+
+	return newXP, nil
 }

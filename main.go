@@ -44,6 +44,12 @@ func main() {
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/item/{itemId:[0-9]+}", api.PutItemHandler).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/item/{itemId:[0-9]+}", api.DeleteItemHandler).Methods("DELETE", "OPTIONS")
 
+	// Experience
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experiences", api.GetExperiencesHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience", api.PostExperienceHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/{experienceId:[0-9]+}", api.PutExperienceHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/{experienceId:[0-9]+}", api.DeleteExperienceHandler).Methods("DELETE", "OPTIONS")
+
 	// Start the HTTP server
 	log.Println("Server listening on :" + config.Cfg().Server.Port)
 	log.Fatal(http.ListenAndServe(":"+config.Cfg().Server.Port, r))
