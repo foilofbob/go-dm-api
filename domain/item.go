@@ -62,7 +62,7 @@ func CreateItem(campaignID int, name string, description string, link string, ra
 
 	lid, err := res.LastInsertId()
 	if err != nil {
-		return nil, insertErr
+		return nil, err
 	}
 
 	return GetItem(int(lid))
@@ -85,13 +85,11 @@ func DeleteItem(itemID int) error {
 	defer db.Close()
 
 	query := "DELETE FROM item WHERE id = ?"
-	res, deleteErr := db.Exec(query, itemID)
+	_, deleteErr := db.Exec(query, itemID)
 
 	if deleteErr != nil {
 		println("Delete item error: " + deleteErr.Error())
 	}
-
-	println(res.RowsAffected())
 
 	return deleteErr
 }

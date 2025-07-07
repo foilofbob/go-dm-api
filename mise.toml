@@ -1,0 +1,31 @@
+[tools]
+go = "1.24"
+
+[tasks.install-gomigrate]
+description = "installs goland-migrate"
+tools.go = "1.24"
+run = "go install -tags mysql github.com/golang-migrate/migrate/v4/cmd/migrate@latest"
+
+[tasks.install-air]
+description = "installs air, for hot reloading"
+tools.go = "1.24"
+run = "go install github.com/air-verse/air@latest"
+
+[tasks.create-migration]
+description = "creates a new migration, expects a string as the name e.g. add_location_tables"
+run = "migrate create -ext sql -dir db/migrations -seq {{args()}}"
+
+[tasks.migrate-up]
+depends = ["install-gomigrate"]
+description = "applies all migrations, can pass in an integer to apply that number of migrations"
+run = "migrate -path db/migrations -database mysql://dm_tool:{{option(name=\"pw\")}}@tcp(localhost:3306)/dm_campaign_manager up {{option(name='x')}}"
+
+[tasks.migrate-down]
+depends = ["install-gomigrate"]
+description = "reverts all migrations, can pass in an integer to revert that number of migrations"
+run = "migrate -path db/migrations -database mysql://dm_tool:{{option(name=\"pw\")}}@tcp(localhost:3306)/dm_campaign_manager down {{option(name='x')}}"
+
+[tasks.default]
+depends = ["install-air"]
+description = "run the app with hot reloading"
+run = "air"
