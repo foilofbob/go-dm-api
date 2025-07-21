@@ -76,6 +76,8 @@ func DeleteLocation(locationID int) error {
 	db := DBConnection()
 	defer db.Close()
 
+	// TODO: Delete associated notes
+
 	query := "DELETE FROM location WHERE id = ?"
 	_, deleteErr := db.Exec(query, locationID)
 	if deleteErr != nil {

@@ -13,17 +13,23 @@ run = "go install github.com/air-verse/air@latest"
 
 [tasks.create-migration]
 description = "creates a new migration, expects a string as the name e.g. add_location_tables"
-run = "migrate create -ext sql -dir db/migrations -seq {{args()}}"
+run = "migrate create -ext sql -dir db/migrations -seq {{arg()}}"
 
 [tasks.migrate-up]
-depends = ["install-gomigrate"]
 description = "applies all migrations, can pass in an integer to apply that number of migrations"
 run = "migrate -path db/migrations -database mysql://dm_tool:{{option(name=\"pw\")}}@tcp(localhost:3306)/dm_campaign_manager up {{option(name='x')}}"
 
 [tasks.migrate-down]
-depends = ["install-gomigrate"]
 description = "reverts all migrations, can pass in an integer to revert that number of migrations"
 run = "migrate -path db/migrations -database mysql://dm_tool:{{option(name=\"pw\")}}@tcp(localhost:3306)/dm_campaign_manager down {{option(name='x')}}"
+
+[tasks.migrate-up-test]
+description = "applies all migrations, can pass in an integer to apply that number of migrations"
+run = "migrate -path db/migrations -database mysql://dm_tool:{{option(name=\"pw\")}}@tcp(localhost:3306)/dm_campaign_manager_test up {{option(name='x')}}"
+
+[tasks.migrate-down-test]
+description = "reverts all migrations, can pass in an integer to revert that number of migrations"
+run = "migrate -path db/migrations -database mysql://dm_tool:{{option(name=\"pw\")}}@tcp(localhost:3306)/dm_campaign_manager_test down {{option(name='x')}}"
 
 [tasks.default]
 depends = ["install-air"]

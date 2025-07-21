@@ -2,23 +2,24 @@ package domain
 
 type PointOfInterest struct {
 	ID            int
+	CampaignID    int
 	SublocationID int
 	Name          string
 }
 
 func GetPointOfInterest(id int) (*PointOfInterest, error) {
-	row := GetByID("point_of_interests", id)
+	row := GetByID("point_of_interest", id)
 	pointOfInterest := &PointOfInterest{}
-	readErr := row.Scan(&pointOfInterest.ID, &pointOfInterest.SublocationID, &pointOfInterest.Name)
+	readErr := row.Scan(&pointOfInterest.ID, &pointOfInterest.CampaignID, &pointOfInterest.SublocationID, &pointOfInterest.Name)
 	if readErr != nil {
 		return nil, readErr
 	}
 	return pointOfInterest, nil
 }
 
-func GetPointsOfInterest(sublocationID int) ([]PointOfInterest, error) {
-	query := "SELECT * FROM point_of_interest WHERE sublocation_id = ?"
-	rows, err := DBQuery(query, sublocationID)
+func GetPointsOfInterest(campaignID int) ([]PointOfInterest, error) {
+	query := "SELECT * FROM point_of_interest WHERE campaign_id = ?"
+	rows, err := DBQuery(query, campaignID)
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +29,7 @@ func GetPointsOfInterest(sublocationID int) ([]PointOfInterest, error) {
 	for rows.Next() {
 		var pointOfInterest PointOfInterest
 
-		if err := rows.Scan(&pointOfInterest.ID, &pointOfInterest.SublocationID, &pointOfInterest.Name); err != nil {
+		if err := rows.Scan(&pointOfInterest.ID, &pointOfInterest.CampaignID, &pointOfInterest.SublocationID, &pointOfInterest.Name); err != nil {
 			return pointOfInterests, err
 		}
 
@@ -42,12 +43,12 @@ func GetPointsOfInterest(sublocationID int) ([]PointOfInterest, error) {
 	return pointOfInterests, nil
 }
 
-func CreatePointOfInterest(locationID int, name string) (*PointOfInterest, error) {
+func CreatePointOfInterest(campaignID int, sublocationID int, name string) (*PointOfInterest, error) {
 	db := DBConnection()
 	defer db.Close()
 
-	query := "INSERT INTO point_of_interest (sublocation_id, name) VALUES (?, ?)"
-	res, insertErr := db.Exec(query, locationID, name)
+	query := "INSERT INTO point_of_interest (campaign_id, sublocation_id, name) VALUES (?, ?, ?)"
+	res, insertErr := db.Exec(query, campaignID, sublocationID, name)
 	if insertErr != nil {
 		return nil, insertErr
 	}
@@ -78,6 +79,8 @@ func DeletePointOfInterest(pointOfInterestID int) error {
 
 	query := "DELETE FROM point_of_interest WHERE id = ?"
 	_, deleteErr := db.Exec(query, pointOfInterestID)
+
+	// TODO: Delete associated notes
 
 	if deleteErr != nil {
 		println("Delete point of interest error: " + deleteErr.Error())

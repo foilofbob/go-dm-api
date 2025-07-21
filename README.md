@@ -27,8 +27,8 @@ Create a new migration with `mise run create-migration add_location_tables`
 
 Apply or revert all (or X number) migrations with
 ```
-mise run migrate-up -pw pass1234
-mise run migrate-down -pw pass1234 -x 2
+mise run migrate-up --pw pass1234
+mise run migrate-down --pw pass1234 --x 2
 ```
 
 ## Running the API

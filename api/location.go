@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"go_dm_api/domain"
@@ -23,23 +24,62 @@ func GetLocationsHandler(w http.ResponseWriter, r *http.Request) {
 	StandardResponse(w, locations)
 }
 
-func GetLocationHandler(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	locationIdStr := vars["locationId"]
-
-	locationId, err := strconv.Atoi(locationIdStr)
-
-	location, err := domain.GetLocation(locationId)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Location fetch failed: %s", err.Error()), http.StatusInternalServerError)
+func PostLocationHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		StandardResponse(w, nil)
 		return
 	}
-	
-	StandardResponse(w, location)
+	enableCORS(&w)
+
+	var location domain.Location
+	json.NewDecoder(r.Body).Decode(&location)
+
+	newLocation, err := domain.CreateLocation(location.CampaignID, location.Name)
+	if err != nil {
+		http.Error(w, "Failed to create location: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	StandardResponse(w, newLocation)
 }
 
-// Post
+func PutLocationHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		StandardResponse(w, nil)
+		return
+	}
+	enableCORS(&w)
 
-// Update
+	var location domain.Location
+	json.NewDecoder(r.Body).Decode(&location)
 
-// Delete
+	updatedLocation, err := domain.UpdateLocation(location.ID, location.Name)
+	if err != nil {
+		http.Error(w, "Failed to update location: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	StandardResponse(w, updatedLocation)
+}
+
+func DeleteLocationHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		StandardResponse(w, nil)
+		return
+	}
+	enableCORS(&w)
+
+	vars := mux.Vars(r)
+	idStr := vars["locationId"]
+	locationID, _ := strconv.Atoi(idStr)
+
+	err := domain.DeleteLocation(locationID)
+	if err != nil {
+		http.Error(w, "Failed to delete location: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}

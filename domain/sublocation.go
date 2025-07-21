@@ -2,6 +2,7 @@ package domain
 
 type Sublocation struct {
 	ID          int
+	CampaignID  int
 	LocationID  int
 	Name        string
 	Description string
@@ -10,16 +11,16 @@ type Sublocation struct {
 func GetSublocation(id int) (*Sublocation, error) {
 	row := GetByID("sublocation", id)
 	sublocation := &Sublocation{}
-	readErr := row.Scan(&sublocation.ID, &sublocation.LocationID, &sublocation.Name, &sublocation.Description)
+	readErr := row.Scan(&sublocation.ID, &sublocation.CampaignID, &sublocation.LocationID, &sublocation.Name, &sublocation.Description)
 	if readErr != nil {
 		return nil, readErr
 	}
 	return sublocation, nil
 }
 
-func GetSublocations(locationId int) ([]Sublocation, error) {
-	query := "SELECT * FROM sublocation WHERE location_id = ?"
-	rows, err := DBQuery(query, locationId)
+func GetSublocations(campaignId int) ([]Sublocation, error) {
+	query := "SELECT * FROM sublocation WHERE campaign_id = ?"
+	rows, err := DBQuery(query, campaignId)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +30,7 @@ func GetSublocations(locationId int) ([]Sublocation, error) {
 	for rows.Next() {
 		var sublocation Sublocation
 
-		if err := rows.Scan(&sublocation.ID, &sublocation.LocationID, &sublocation.Name, &sublocation.Description); err != nil {
+		if err := rows.Scan(&sublocation.ID, &sublocation.CampaignID, &sublocation.LocationID, &sublocation.Name, &sublocation.Description); err != nil {
 			return sublocations, err
 		}
 
@@ -43,12 +44,12 @@ func GetSublocations(locationId int) ([]Sublocation, error) {
 	return sublocations, nil
 }
 
-func CreateSublocation(locationId int, name string, description string) (*Sublocation, error) {
+func CreateSublocation(campaignId int, locationId int, name string, description string) (*Sublocation, error) {
 	db := DBConnection()
 	defer db.Close()
 
-	query := "INSERT INTO sublocation (location_id, name, description) VALUES (?, ?, ?)"
-	res, insertErr := db.Exec(query, locationId, name, description)
+	query := "INSERT INTO sublocation (campaign_id, location_id, name, description) VALUES (?, ?, ?, ?)"
+	res, insertErr := db.Exec(query, campaignId, locationId, name, description)
 	if insertErr != nil {
 		return nil, insertErr
 	}

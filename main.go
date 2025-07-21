@@ -50,6 +50,24 @@ func main() {
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/{experienceId:[0-9]+}", api.PutExperienceHandler).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/{experienceId:[0-9]+}", api.DeleteExperienceHandler).Methods("DELETE", "OPTIONS")
 
+	// Locations
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/locations", api.GetLocationsHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/location", api.PostLocationHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/location/{locationId:[0-9]+}", api.PutLocationHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/location/{locationId:[0-9]+}", api.DeleteLocationHandler).Methods("DELETE", "OPTIONS")
+
+	// Sublocations
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocations", api.GetSublocationsHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocation", api.PostSublocationHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocation/{sublocationId:[0-9]+}", api.PutSublocationHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocation/{sublocationId:[0-9]+}", api.DeleteSublocationHandler).Methods("DELETE", "OPTIONS")
+
+	// Points of interest
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/points-of-interest", api.GetPointsOfInterestHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest", api.PostPointOfInterestHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest/{pointOfInterestId:[0-9]+}", api.PutPointOfInterestHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest/{pointOfInterestId:[0-9]+}", api.DeletePointOfInterestHandler).Methods("DELETE", "OPTIONS")
+
 	// Start the HTTP server
 	log.Println("Server listening on :" + config.Cfg().Server.Port)
 	log.Fatal(http.ListenAndServe(":"+config.Cfg().Server.Port, r))
