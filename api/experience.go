@@ -129,3 +129,24 @@ func DeleteExperienceHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func DeleteExperienceClearFinalizedHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		StandardResponse(w, nil)
+		return
+	}
+	enableCORS(&w)
+
+	vars := mux.Vars(r)
+	campaignIdStr := vars["campaignId"]
+
+	campaignId, _ := strconv.Atoi(campaignIdStr)
+
+	err := domain.ClearFinalizedExperiences(campaignId)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Clear finalized experiences failed: %s", err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}

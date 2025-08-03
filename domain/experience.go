@@ -79,13 +79,25 @@ func DeleteExperience(experienceID int) error {
 	defer db.Close()
 
 	query := "DELETE FROM experience WHERE id = ?"
-	res, deleteErr := db.Exec(query, experienceID)
+	_, deleteErr := db.Exec(query, experienceID)
 
 	if deleteErr != nil {
 		println("Delete experience error: " + deleteErr.Error())
 	}
 
-	println(res.RowsAffected())
+	return deleteErr
+}
+
+func ClearFinalizedExperiences(campaignID int) error {
+	db := DBConnection()
+	defer db.Close()
+
+	query := "DELETE FROM experience WHERE finalized = true AND campaign_id = ?"
+	_, deleteErr := db.Exec(query, campaignID)
+
+	if deleteErr != nil {
+		println("Delete finalized experience error: " + deleteErr.Error())
+	}
 
 	return deleteErr
 }

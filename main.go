@@ -49,6 +49,7 @@ func main() {
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience", api.PostExperienceHandler).Methods("POST", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/{experienceId:[0-9]+}", api.PutExperienceHandler).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/{experienceId:[0-9]+}", api.DeleteExperienceHandler).Methods("DELETE", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/clear-finalized", api.DeleteExperienceClearFinalizedHandler).Methods("DELETE", "OPTIONS")
 
 	// Locations
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/locations", api.GetLocationsHandler).Methods("GET")
