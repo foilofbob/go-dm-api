@@ -9,6 +9,12 @@ import (
 	"strconv"
 )
 
+/*
+TODO: Eventually this will need to be paginated, and the response will need to include the relevant notes
+- fetch in batches based on page number
+- fetch notes based on those ids
+- new struct to contain days, notes, and pagination details
+*/
 func GetGameDaysHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	campaignIdStr := vars["campaignId"]
@@ -24,6 +30,28 @@ func GetGameDaysHandler(w http.ResponseWriter, r *http.Request) {
 	StandardResponse(w, gameDays)
 }
 
+// PostStartingGameDayHandler This endpoint is for creating the first game day of a campaign
+func PostStartingGameDayHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		StandardResponse(w, nil)
+		return
+	}
+	enableCORS(&w)
+
+	var gameDay domain.GameDay
+	json.NewDecoder(r.Body).Decode(&gameDay)
+
+	newGameDay, err := domain.CreateGameDay(gameDay.CampaignID, gameDay.InGameDay, gameDay.Day, gameDay.Month, gameDay.Year)
+	if err != nil {
+		http.Error(w, "Failed to create initial Game Day", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	StandardResponse(w, newGameDay)
+}
+
+// PostGameDayHandler For a campaign that is already up and running, this endpoint adds the next consecutive day
 func PostGameDayHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		StandardResponse(w, nil)
@@ -56,9 +84,6 @@ func PostGameDayHandler(w http.ResponseWriter, r *http.Request) {
 			year += 1
 		}
 	}
-
-	var gameDay domain.GameDay
-	json.NewDecoder(r.Body).Decode(&gameDay)
 
 	newGameDay, err := domain.CreateGameDay(mostRecentGameDay.CampaignID, mostRecentGameDay.InGameDay+1, day, month, year)
 	if err != nil {

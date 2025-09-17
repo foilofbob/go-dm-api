@@ -46,13 +46,22 @@ func ListCampaigns() ([]Campaign, error) {
 	return campaigns, nil
 }
 
-func CreateCampaign(name string, campaignSettingID int) error {
-	query := "INSERT INTO campaign (name, current_player_xp, campaign_setting_id) VALUES (?, 0, ?)"
-	_, insertErr := DBExec(query, name, campaignSettingID)
+func CreateCampaign(name string, currentXp int, campaignSettingID int) (*Campaign, error) {
+	db := DBConnection()
+	defer db.Close()
+
+	query := "INSERT INTO campaign (name, current_player_xp, campaign_setting_id) VALUES (?,?,?)"
+	res, insertErr := db.Exec(query, name, currentXp, campaignSettingID)
 	if insertErr != nil {
-		return insertErr
+		return nil, insertErr
 	}
-	return nil
+
+	lid, err := res.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	return GetCampaign(int(lid))
 }
 
 func UpdateCurrentPlayerXP(campaignID int, experience int) (int, error) {

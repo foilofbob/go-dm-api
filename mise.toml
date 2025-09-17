@@ -2,7 +2,7 @@
 go = "1.24"
 
 [tasks.install-gomigrate]
-description = "installs goland-migrate"
+description = "installs golang-migrate"
 tools.go = "1.24"
 run = "go install -tags mysql github.com/golang-migrate/migrate/v4/cmd/migrate@latest"
 
@@ -32,6 +32,5 @@ description = "reverts all migrations, can pass in an integer to revert that num
 run = "migrate -path db/migrations -database mysql://dm_tool:{{option(name=\"pw\")}}@tcp(localhost:3306)/dm_campaign_manager_test down {{option(name='x')}}"
 
 [tasks.default]
-depends = ["install-air"]
-description = "run the app with hot reloading"
+description = "run the app with hot reloading - requires air to be installed"
 run = "air"

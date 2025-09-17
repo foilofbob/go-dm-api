@@ -74,15 +74,21 @@ func ListCampaignHandler(w http.ResponseWriter, _ *http.Request) {
 }
 
 func PostCampaignHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		StandardResponse(w, nil)
+		return
+	}
+	enableCORS(&w)
+
 	var campaign domain.Campaign
 	json.NewDecoder(r.Body).Decode(&campaign)
 
-	err := domain.CreateCampaign(campaign.Name, campaign.CampaignSettingID)
+	newCampaign, err := domain.CreateCampaign(campaign.Name, campaign.CurrentPlayerXP, campaign.CampaignSettingID)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error fetching campaigns: %s", err.Error()), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Error creating campaign: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintln(w, "Campaign created successfully")
+	StandardResponse(w, newCampaign)
 }

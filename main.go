@@ -19,12 +19,35 @@ func main() {
 
 	// Campaign routes
 	r.HandleFunc("/campaign", api.ListCampaignHandler).Methods("GET")
-	r.HandleFunc("/campaign", api.PostCampaignHandler).Methods("POST")
+	r.HandleFunc("/campaign", api.PostCampaignHandler).Methods("POST", "OPTIONS")
 	r.HandleFunc("/campaign/{id:[0-9]+}", api.GetCampaignHandler).Methods("GET")
+
+	// CampaignSetting routes
+	r.HandleFunc("/campaign-settings", api.ListCampaignSettingHandler).Methods("GET")
+
+	// Experience
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experiences", api.GetExperiencesHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience", api.PostExperienceHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/{experienceId:[0-9]+}", api.PutExperienceHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/{experienceId:[0-9]+}", api.DeleteExperienceHandler).Methods("DELETE", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/clear-finalized", api.DeleteExperienceClearFinalizedHandler).Methods("DELETE", "OPTIONS")
 
 	// GameDay routes
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/gameday", api.GetGameDaysHandler).Methods("GET")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/gameday", api.PostGameDayHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/gameday/start", api.PostStartingGameDayHandler).Methods("POST", "OPTIONS")
+
+	// Items
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/items", api.GetItemsHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/item", api.PostItemHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/item/{itemId:[0-9]+}", api.PutItemHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/item/{itemId:[0-9]+}", api.DeleteItemHandler).Methods("DELETE", "OPTIONS")
+
+	// Locations
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/locations", api.GetLocationsHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/location", api.PostLocationHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/location/{locationId:[0-9]+}", api.PutLocationHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/location/{locationId:[0-9]+}", api.DeleteLocationHandler).Methods("DELETE", "OPTIONS")
 
 	// Note routes
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/note/{referenceType}", api.GetNotesHandler).Methods("GET")
@@ -38,36 +61,17 @@ func main() {
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/player/{playerId:[0-9]+}", api.PutPlayerHandler).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/player/{playerId:[0-9]+}", api.DeletePlayerHandler).Methods("DELETE", "OPTIONS")
 
-	// Items
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/items", api.GetItemsHandler).Methods("GET")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/item", api.PostItemHandler).Methods("POST", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/item/{itemId:[0-9]+}", api.PutItemHandler).Methods("PUT", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/item/{itemId:[0-9]+}", api.DeleteItemHandler).Methods("DELETE", "OPTIONS")
-
-	// Experience
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experiences", api.GetExperiencesHandler).Methods("GET")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience", api.PostExperienceHandler).Methods("POST", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/{experienceId:[0-9]+}", api.PutExperienceHandler).Methods("PUT", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/{experienceId:[0-9]+}", api.DeleteExperienceHandler).Methods("DELETE", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience/clear-finalized", api.DeleteExperienceClearFinalizedHandler).Methods("DELETE", "OPTIONS")
-
-	// Locations
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/locations", api.GetLocationsHandler).Methods("GET")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/location", api.PostLocationHandler).Methods("POST", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/location/{locationId:[0-9]+}", api.PutLocationHandler).Methods("PUT", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/location/{locationId:[0-9]+}", api.DeleteLocationHandler).Methods("DELETE", "OPTIONS")
+	// Points of interest
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/points-of-interest", api.GetPointsOfInterestHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest", api.PostPointOfInterestHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest/{pointOfInterestId:[0-9]+}", api.PutPointOfInterestHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest/{pointOfInterestId:[0-9]+}", api.DeletePointOfInterestHandler).Methods("DELETE", "OPTIONS")
 
 	// Sublocations
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocations", api.GetSublocationsHandler).Methods("GET")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocation", api.PostSublocationHandler).Methods("POST", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocation/{sublocationId:[0-9]+}", api.PutSublocationHandler).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocation/{sublocationId:[0-9]+}", api.DeleteSublocationHandler).Methods("DELETE", "OPTIONS")
-
-	// Points of interest
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/points-of-interest", api.GetPointsOfInterestHandler).Methods("GET")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest", api.PostPointOfInterestHandler).Methods("POST", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest/{pointOfInterestId:[0-9]+}", api.PutPointOfInterestHandler).Methods("PUT", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest/{pointOfInterestId:[0-9]+}", api.DeletePointOfInterestHandler).Methods("DELETE", "OPTIONS")
 
 	// Start the HTTP server
 	log.Println("Server listening on :" + config.Cfg().Server.Port)
