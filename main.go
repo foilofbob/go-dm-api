@@ -35,7 +35,7 @@ func main() {
 	// GameDay routes
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/gameday", api.GetGameDaysHandler).Methods("GET")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/gameday", api.PostGameDayHandler).Methods("POST", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/gameday/start", api.PostStartingGameDayHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/gameday/initialize", api.PostInitializeGameDayHandler).Methods("POST", "OPTIONS")
 
 	// Items
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/items", api.GetItemsHandler).Methods("GET")

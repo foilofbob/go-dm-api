@@ -9,6 +9,15 @@ type GameDay struct {
 	Year       int
 }
 
+type SkinnyCycle struct {
+	ID     int
+	Offset int
+}
+type InitializeGameDay struct {
+	GameDay GameDay
+	Cycles  []SkinnyCycle
+}
+
 func GetGameDay(id int) (*GameDay, error) {
 	row := GetByID("game_day", id)
 	gameDay := &GameDay{}

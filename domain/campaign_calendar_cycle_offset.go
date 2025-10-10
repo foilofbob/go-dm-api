@@ -33,3 +33,13 @@ func GetCalendarCycleOffsets(campaignID int) ([]CampaignCalendarCycleOffset, err
 
 	return offsets, nil
 }
+
+func CreateCalendarCycleOffset(campaignID int, CalendarCycleID int, offset int) error {
+	db := DBConnection()
+	defer db.Close()
+
+	query := "INSERT INTO campaign_calendar_cycle_offset (campaign_id, calendar_cycle_id, offset) VALUES (?, ?, ?)"
+	_, insertErr := db.Exec(query, campaignID, CalendarCycleID, offset)
+
+	return insertErr
+}
