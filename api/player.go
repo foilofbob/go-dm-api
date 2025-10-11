@@ -34,7 +34,7 @@ func PostPlayerHandler(w http.ResponseWriter, r *http.Request) {
 	var player domain.Player
 	json.NewDecoder(r.Body).Decode(&player)
 
-	newPlayer, err := domain.CreatePlayer(player.CampaignID, player.Name, player.Race, player.Class, player.ArmorClass, player.HitPoints, player.PassivePerception, player.Languages, player.Movement)
+	newPlayer, err := domain.CreatePlayer(player.CampaignID, player.Name, player.Race, player.Class, player.ArmorClass, player.HitPoints, player.PassivePerception, player.Languages, player.Movement, player.Strength, player.Dexterity, player.Constitution, player.Intelligence, player.Wisdom, player.Charisma, player.Proficiencies, player.Saves)
 	if err != nil {
 		http.Error(w, "Failed to create player: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -54,7 +54,7 @@ func PutPlayerHandler(w http.ResponseWriter, r *http.Request) {
 	var player domain.Player
 	json.NewDecoder(r.Body).Decode(&player)
 
-	updateItem, err := domain.UpdatePlayer(player.ID, player.Name, player.Race, player.Class, player.ArmorClass, player.HitPoints, player.PassivePerception, player.Languages, player.Movement)
+	updateItem, err := domain.UpdatePlayer(player.ID, player.Name, player.Race, player.Class, player.ArmorClass, player.HitPoints, player.PassivePerception, player.Languages, player.Movement, player.Strength, player.Dexterity, player.Constitution, player.Intelligence, player.Wisdom, player.Charisma, player.Proficiencies, player.Saves)
 	if err != nil {
 		http.Error(w, "Failed to update player: "+err.Error(), http.StatusInternalServerError)
 		return
