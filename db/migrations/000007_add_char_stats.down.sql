@@ -1,0 +1,9 @@
+alter table player
+    drop column strength,
+    drop column dexterity,
+    drop column constitution,
+    drop column intelligence,
+    drop column wisdom,
+    drop column charisma,
+    drop column proficiencies,
+    drop column saves;
