@@ -35,4 +35,6 @@ mise run migrate-down --pw pass1234 --x 2
 
 We're using [air](https://github.com/air-verse/air) for hot reloading, run the app with: `mise run`
 
-Exercise it with curl: `curl http://localhost:8090/note/1`
+Or don't: `go run main.go`
+
+Exercise it with curl: `curl http://localhost:8090/note/1` (or `curl.exe http://localhost:8090/note/1` on Windows)

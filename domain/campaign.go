@@ -74,7 +74,7 @@ func UpdateCurrentPlayerXP(campaignID int, experience int) (int, error) {
 		return -1, err
 	}
 
-	players, err := GetPlayers(campaignID)
+	players, err := GetPlayerCharacters(campaignID)
 	if err != nil {
 		return -1, err
 	}

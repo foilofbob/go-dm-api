@@ -9,12 +9,12 @@ import (
 func GetByID(tableName string, id int) *sql.Row {
 	db := DBConnection()
 	defer db.Close()
-	query := fmt.Sprintf("SELECT * FROM %s WHERE id = ?", tableName)
+	query := fmt.Sprintf("SELECT * FROM `%s` WHERE id = ?", tableName)
 	return db.QueryRow(query, id)
 }
 
 func GetAll(tableName string) (*sql.Rows, error) {
-	query := fmt.Sprintf("SELECT * FROM %s", tableName)
+	query := fmt.Sprintf("SELECT * FROM `%s`", tableName)
 	return DBQuery(query)
 }
 

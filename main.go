@@ -25,6 +25,13 @@ func main() {
 	// CampaignSetting routes
 	r.HandleFunc("/campaign-settings", api.ListCampaignSettingHandler).Methods("GET")
 
+	// Characters
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/players", api.GetPlayersHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/npcs", api.GetNPCsHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/character", api.PostCharacterHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/character/{characterId:[0-9]+}", api.PutCharacterHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/character/{characterId:[0-9]+}", api.DeleteCharacterHandler).Methods("DELETE", "OPTIONS")
+
 	// Experience
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experiences", api.GetExperiencesHandler).Methods("GET")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/experience", api.PostExperienceHandler).Methods("POST", "OPTIONS")
@@ -54,12 +61,6 @@ func main() {
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/note", api.PostNoteHandler).Methods("POST", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/note/{noteId:[0-9]+}", api.PutNoteHandler).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/note/{noteId:[0-9]+}", api.DeleteNoteHandler).Methods("DELETE", "OPTIONS")
-
-	// Players
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/players", api.GetPlayersHandler).Methods("GET")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/player", api.PostPlayerHandler).Methods("POST", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/player/{playerId:[0-9]+}", api.PutPlayerHandler).Methods("PUT", "OPTIONS")
-	r.HandleFunc("/campaign/{campaignId:[0-9]+}/player/{playerId:[0-9]+}", api.DeletePlayerHandler).Methods("DELETE", "OPTIONS")
 
 	// Points of interest
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/points-of-interest", api.GetPointsOfInterestHandler).Methods("GET")
