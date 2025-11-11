@@ -49,6 +49,8 @@ type Character struct {
 	SleightOfHandProficiencyBonus  decimal.Decimal
 	StealthProficiencyBonus        decimal.Decimal
 	SurvivalProficiencyBonus       decimal.Decimal
+
+	Level int
 }
 
 func GetCharacter(id int) (*Character, error) {
@@ -65,7 +67,7 @@ func GetCharacter(id int) (*Character, error) {
 		&character.IntimidationProficiencyBonus, &character.InvestigationProficiencyBonus, &character.MedicineProficiencyBonus,
 		&character.NatureProficiencyBonus, &character.PerceptionProficiencyBonus, &character.PerformanceProficiencyBonus,
 		&character.PersuasionProficiencyBonus, &character.ReligionProficiencyBonus, &character.SleightOfHandProficiencyBonus,
-		&character.StealthProficiencyBonus, &character.SurvivalProficiencyBonus, &character.PlayerType)
+		&character.StealthProficiencyBonus, &character.SurvivalProficiencyBonus, &character.PlayerType, &character.Level)
 
 	if readErr != nil {
 		return nil, readErr
@@ -98,7 +100,7 @@ func GetCharacters(campaignId int, playerType string) ([]Character, error) {
 			&character.IntimidationProficiencyBonus, &character.InvestigationProficiencyBonus, &character.MedicineProficiencyBonus,
 			&character.NatureProficiencyBonus, &character.PerceptionProficiencyBonus, &character.PerformanceProficiencyBonus,
 			&character.PersuasionProficiencyBonus, &character.ReligionProficiencyBonus, &character.SleightOfHandProficiencyBonus,
-			&character.StealthProficiencyBonus, &character.SurvivalProficiencyBonus, &character.PlayerType); err != nil {
+			&character.StealthProficiencyBonus, &character.SurvivalProficiencyBonus, &character.PlayerType, &character.Level); err != nil {
 			return characters, err
 		}
 
@@ -130,7 +132,7 @@ func CreateCharacter(campaignID int, name string, race string, class string, arm
 	intimidationProficiencyBonus decimal.Decimal, investigationProficiencyBonus decimal.Decimal, medicineProficiencyBonus decimal.Decimal,
 	natureProficiencyBonus decimal.Decimal, perceptionProficiencyBonus decimal.Decimal, performanceProficiencyBonus decimal.Decimal,
 	persuasionProficiencyBonus decimal.Decimal, religionProficiencyBonus decimal.Decimal, sleightOfHandProficiencyBonus decimal.Decimal,
-	stealthProficiencyBonus decimal.Decimal, survivalProficiencyBonus decimal.Decimal) (*Character, error) {
+	stealthProficiencyBonus decimal.Decimal, survivalProficiencyBonus decimal.Decimal, level int) (*Character, error) {
 	db := DBConnection()
 	defer db.Close()
 
@@ -146,8 +148,8 @@ func CreateCharacter(campaignID int, name string, race string, class string, arm
 		                       investigation_proficiency_bonus, medicine_proficiency_bonus, nature_proficiency_bonus, 
 		                       perception_proficiency_bonus, performance_proficiency_bonus, persuasion_proficiency_bonus, 
 		                       religion_proficiency_bonus, sleight_of_hand_proficiency_bonus, stealth_proficiency_bonus, 
-		                       survival_proficiency_bonus)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		                       survival_proficiency_bonus, level)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	`
 
 	res, insertErr := db.Exec(query, campaignID, name, race, class, armorClass, hitPoints, passivePerception, languages,
@@ -157,7 +159,7 @@ func CreateCharacter(campaignID int, name string, race string, class string, arm
 		arcanaProficiencyBonus, athleticsProficiencyBonus, deceptionProficiencyBonus, historyProficiencyBonus,
 		insightProficiencyBonus, intimidationProficiencyBonus, investigationProficiencyBonus, medicineProficiencyBonus,
 		natureProficiencyBonus, perceptionProficiencyBonus, performanceProficiencyBonus, persuasionProficiencyBonus,
-		religionProficiencyBonus, sleightOfHandProficiencyBonus, stealthProficiencyBonus, survivalProficiencyBonus)
+		religionProficiencyBonus, sleightOfHandProficiencyBonus, stealthProficiencyBonus, survivalProficiencyBonus, level)
 	if insertErr != nil {
 		return nil, insertErr
 	}
@@ -180,7 +182,7 @@ func UpdateCharacter(characterID int, name string, race string, class string, ar
 	intimidationProficiencyBonus decimal.Decimal, investigationProficiencyBonus decimal.Decimal, medicineProficiencyBonus decimal.Decimal,
 	natureProficiencyBonus decimal.Decimal, perceptionProficiencyBonus decimal.Decimal, performanceProficiencyBonus decimal.Decimal,
 	persuasionProficiencyBonus decimal.Decimal, religionProficiencyBonus decimal.Decimal, sleightOfHandProficiencyBonus decimal.Decimal,
-	stealthProficiencyBonus decimal.Decimal, survivalProficiencyBonus decimal.Decimal) (*Character, error) {
+	stealthProficiencyBonus decimal.Decimal, survivalProficiencyBonus decimal.Decimal, level int) (*Character, error) {
 	db := DBConnection()
 	defer db.Close()
 
@@ -196,7 +198,7 @@ func UpdateCharacter(characterID int, name string, race string, class string, ar
 		    intimidation_proficiency_bonus = ?, investigation_proficiency_bonus = ?, medicine_proficiency_bonus = ?, 
 		    nature_proficiency_bonus = ?, perception_proficiency_bonus = ?, performance_proficiency_bonus = ?, 
 		    persuasion_proficiency_bonus = ?, religion_proficiency_bonus = ?, sleight_of_hand_proficiency_bonus = ?, 
-		    stealth_proficiency_bonus = ?, survival_proficiency_bonus = ? 
+		    stealth_proficiency_bonus = ?, survival_proficiency_bonus = ?, level = ? 
 		WHERE id = ?
 	`
 
@@ -207,7 +209,7 @@ func UpdateCharacter(characterID int, name string, race string, class string, ar
 		athleticsProficiencyBonus, deceptionProficiencyBonus, historyProficiencyBonus, insightProficiencyBonus,
 		intimidationProficiencyBonus, investigationProficiencyBonus, medicineProficiencyBonus, natureProficiencyBonus,
 		perceptionProficiencyBonus, performanceProficiencyBonus, persuasionProficiencyBonus, religionProficiencyBonus,
-		sleightOfHandProficiencyBonus, stealthProficiencyBonus, survivalProficiencyBonus, characterID)
+		sleightOfHandProficiencyBonus, stealthProficiencyBonus, survivalProficiencyBonus, characterID, level)
 	if updateErr != nil {
 		return nil, updateErr
 	}

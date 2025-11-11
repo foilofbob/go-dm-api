@@ -60,7 +60,7 @@ func PostCharacterHandler(w http.ResponseWriter, r *http.Request) {
 		character.IntimidationProficiencyBonus, character.InvestigationProficiencyBonus, character.MedicineProficiencyBonus,
 		character.NatureProficiencyBonus, character.PerceptionProficiencyBonus, character.PerformanceProficiencyBonus,
 		character.PersuasionProficiencyBonus, character.ReligionProficiencyBonus, character.SleightOfHandProficiencyBonus,
-		character.StealthProficiencyBonus, character.SurvivalProficiencyBonus)
+		character.StealthProficiencyBonus, character.SurvivalProficiencyBonus, character.Level)
 	if err != nil {
 		http.Error(w, "Failed to create character: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -95,7 +95,7 @@ func PutCharacterHandler(w http.ResponseWriter, r *http.Request) {
 		character.IntimidationProficiencyBonus, character.InvestigationProficiencyBonus, character.MedicineProficiencyBonus,
 		character.NatureProficiencyBonus, character.PerceptionProficiencyBonus, character.PerformanceProficiencyBonus,
 		character.PersuasionProficiencyBonus, character.ReligionProficiencyBonus, character.SleightOfHandProficiencyBonus,
-		character.StealthProficiencyBonus, character.SurvivalProficiencyBonus)
+		character.StealthProficiencyBonus, character.SurvivalProficiencyBonus, character.Level)
 	if err != nil {
 		http.Error(w, "Failed to update character: "+err.Error(), http.StatusInternalServerError)
 		return

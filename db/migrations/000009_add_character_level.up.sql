@@ -1,0 +1,1 @@
+alter table `character` add column level int not null default 0;
