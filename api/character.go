@@ -77,6 +77,8 @@ func PutCharacterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	enableCORS(&w)
 
+	fmt.Println("Received PUT Character Request")
+
 	var character domain.Character
 	err := json.NewDecoder(r.Body).Decode(&character)
 	if err != nil {
@@ -100,6 +102,8 @@ func PutCharacterHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to update character: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	fmt.Println("Completed PUT Character Request")
 
 	w.WriteHeader(http.StatusCreated)
 	StandardResponse(w, updateItem)

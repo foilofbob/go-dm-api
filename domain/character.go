@@ -209,7 +209,7 @@ func UpdateCharacter(characterID int, name string, race string, class string, ar
 		athleticsProficiencyBonus, deceptionProficiencyBonus, historyProficiencyBonus, insightProficiencyBonus,
 		intimidationProficiencyBonus, investigationProficiencyBonus, medicineProficiencyBonus, natureProficiencyBonus,
 		perceptionProficiencyBonus, performanceProficiencyBonus, persuasionProficiencyBonus, religionProficiencyBonus,
-		sleightOfHandProficiencyBonus, stealthProficiencyBonus, survivalProficiencyBonus, characterID, level)
+		sleightOfHandProficiencyBonus, stealthProficiencyBonus, survivalProficiencyBonus, level, characterID)
 	if updateErr != nil {
 		return nil, updateErr
 	}
