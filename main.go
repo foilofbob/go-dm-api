@@ -25,6 +25,12 @@ func main() {
 	// CampaignSetting routes
 	r.HandleFunc("/campaign-settings", api.ListCampaignSettingHandler).Methods("GET")
 
+	// Categories
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/categories", api.GetCategoriesHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/category", api.PostCategoryHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/category/{categoryId:[0-9]+}", api.PutCategoryHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/category/{categoryId:[0-9]+}", api.DeleteCategoryHandler).Methods("DELETE", "OPTIONS")
+
 	// Characters
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/players", api.GetPlayersHandler).Methods("GET")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/npcs", api.GetNPCsHandler).Methods("GET")
