@@ -74,6 +74,9 @@ func main() {
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest/{pointOfInterestId:[0-9]+}", api.PutPointOfInterestHandler).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest/{pointOfInterestId:[0-9]+}", api.DeletePointOfInterestHandler).Methods("DELETE", "OPTIONS")
 
+	// Spells
+	r.HandleFunc("/spells", api.ListSpellsHandler).Methods("GET")
+
 	// Sublocations
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocations", api.GetSublocationsHandler).Methods("GET")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocation", api.PostSublocationHandler).Methods("POST", "OPTIONS")
