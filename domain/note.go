@@ -88,7 +88,7 @@ func DeleteNote(noteID int) error {
 	res, deleteErr := db.Exec(query, noteID)
 
 	if deleteErr != nil {
-		println("Deleted note error: " + deleteErr.Error())
+		println("Delete note error: " + deleteErr.Error())
 	}
 
 	println(res.RowsAffected())

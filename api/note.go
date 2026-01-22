@@ -12,7 +12,7 @@ import (
 // GetNoteHandler Do we actually need to fetch a single note?
 func GetNoteHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	idStr := vars["id"]
+	idStr := vars["noteId"]
 
 	noteId, err := strconv.Atoi(idStr)
 

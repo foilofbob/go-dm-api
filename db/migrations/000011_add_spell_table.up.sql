@@ -1,4 +1,4 @@
-create table spell
+create table if not exists spell
 (
     `id`              int           not null auto_increment,
     `name`            varchar(50)   not null,

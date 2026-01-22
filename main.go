@@ -74,6 +74,15 @@ func main() {
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest/{pointOfInterestId:[0-9]+}", api.PutPointOfInterestHandler).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/campaign/{campaignId:[0-9]+}/point-of-interest/{pointOfInterestId:[0-9]+}", api.DeletePointOfInterestHandler).Methods("DELETE", "OPTIONS")
 
+	// Spell Books
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/spellbooks", api.GetSpellBooksHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/spellbook", api.PostSpellBookHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/spellbook/{spellBookId:[0-9]+}", api.GetSpellBookHandler).Methods("GET")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/spellbook/{spellBookId:[0-9]+}", api.DeleteSpellBookHandler).Methods("DELETE", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/spellbook/{spellBookId:[0-9]+}", api.PutSpellBookHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/spellbook/{spellBookId:[0-9]+}/spell", api.PostSpellBookEntryHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/campaign/{campaignId:[0-9]+}/spellbook/{spellBookId:[0-9]+}/spell/{spellBookEntryId}", api.DeleteSpellBookEntryHandler).Methods("DELETE", "OPTIONS")
+
 	// Spells
 	r.HandleFunc("/spells", api.ListSpellsHandler).Methods("GET")
 

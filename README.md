@@ -65,6 +65,11 @@ Apply or revert all (or X number) migrations with
 mise run migrate-up --pw pass1234
 mise run migrate-down --pw pass1234 --x 2
 ```
+**NOTE**: There are Mac specific task definitions for running migrations:
+```
+mise run mac-migrate-up --pw pass1234
+mise run mac-migrate-down --pw pass1234 --x 2
+```
 
 ## Running the API
 

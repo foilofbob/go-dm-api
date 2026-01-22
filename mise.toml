@@ -16,19 +16,35 @@ description = "creates a new migration, expects a string as the name e.g. add_lo
 run = "migrate create -ext sql -dir db/migrations -seq {{arg()}}"
 
 [tasks.migrate-up]
-description = "applies all migrations, can pass in an integer to apply that number of migrations"
-run = 'migrate -path db/migrations -database "mysql://dm_tool:{{option(name=`pw`)}}@tcp(localhost:3306)/dm_campaign_manager" up {{option(name=`x`)}}'
+description = "PC Specific - applies all migrations, can pass in an integer to apply that number of migrations"
+run = "migrate -path db/migrations -database mysql://dm_tool:{{option(name=\"pw\")}}@tcp(localhost:3306)/dm_campaign_manager up {{option(name='x')}}"
 
 [tasks.migrate-down]
-description = "reverts all migrations, can pass in an integer to revert that number of migrations"
-run = 'migrate -path db/migrations -database "mysql://dm_tool:{{option(name=`pw`)}}@tcp(localhost:3306)/dm_campaign_manager" down {{option(name=`x`)}}'
+description = "PC Specific - reverts all migrations, can pass in an integer to revert that number of migrations"
+run = "migrate -path db/migrations -database mysql://dm_tool:{{option(name=\"pw\")}}@tcp(localhost:3306)/dm_campaign_manager down {{option(name='x')}}"
 
 [tasks.migrate-up-test]
-description = "applies all migrations, can pass in an integer to apply that number of migrations"
-run = 'migrate -path db/migrations -database "mysql://dm_tool:{{option(name=`pw`)}}@tcp(localhost:3306)/dm_campaign_manager_test" up {{option(name=`x`)}}'
+description = "PC Specific - applies all migrations, can pass in an integer to apply that number of migrations"
+run = "migrate -path db/migrations -database mysql://dm_tool:{{option(name=\"pw\")}}@tcp(localhost:3306)/dm_campaign_manager_test up {{option(name='x')}}"
 
 [tasks.migrate-down-test]
-description = "reverts all migrations, can pass in an integer to revert that number of migrations"
+description = "PC Specific - reverts all migrations, can pass in an integer to revert that number of migrations"
+run = "migrate -path db/migrations -database mysql://dm_tool:{{option(name=\"pw\")}}@tcp(localhost:3306)/dm_campaign_manager_test down {{option(name='x')}}"
+
+[tasks.mac-migrate-up]
+description = "MAC Specific - applies all migrations, can pass in an integer to apply that number of migrations"
+run = 'migrate -path db/migrations -database "mysql://dm_tool:{{option(name=`pw`)}}@tcp(localhost:3306)/dm_campaign_manager" up {{option(name=`x`)}}'
+
+[tasks.mac-migrate-down]
+description = "MAC Specific - reverts all migrations, can pass in an integer to revert that number of migrations"
+run = 'migrate -path db/migrations -database "mysql://dm_tool:{{option(name=`pw`)}}@tcp(localhost:3306)/dm_campaign_manager" down {{option(name=`x`)}}'
+
+[tasks.mac-migrate-up-test]
+description = "MAC Specific - applies all migrations, can pass in an integer to apply that number of migrations"
+run = 'migrate -path db/migrations -database "mysql://dm_tool:{{option(name=`pw`)}}@tcp(localhost:3306)/dm_campaign_manager_test" up {{option(name=`x`)}}'
+
+[tasks.mac-migrate-down-test]
+description = "MAC Specific - reverts all migrations, can pass in an integer to revert that number of migrations"
 run = 'migrate -path db/migrations -database "mysql://dm_tool:{{option(name=`pw`)}}@tcp(localhost:3306)/dm_campaign_manager_test" down {{option(name=`x`)}}'
 
 [tasks.default]
