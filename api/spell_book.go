@@ -9,6 +9,27 @@ import (
 	"strconv"
 )
 
+type CompleteSpellBook struct {
+	ID               int
+	CampaignID       int
+	CharacterID      int
+	SpellStats       string
+	SpellBookEntries []domain.SpellBookEntry
+}
+
+func BuildCompleteSpellBook(spellBook domain.SpellBook) CompleteSpellBook {
+	var completeSpellBook CompleteSpellBook
+	spellBookEntries, _ := domain.GetSpellBookEntries(spellBook.ID)
+
+	completeSpellBook.ID = spellBook.ID
+	completeSpellBook.CampaignID = spellBook.CampaignID
+	completeSpellBook.CharacterID = spellBook.CharacterID
+	completeSpellBook.SpellStats = spellBook.SpellStats
+	completeSpellBook.SpellBookEntries = spellBookEntries
+
+	return completeSpellBook
+}
+
 func GetSpellBookHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr := vars["spellBookId"]
@@ -22,7 +43,7 @@ func GetSpellBookHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, spellBook)
+	StandardResponse(w, BuildCompleteSpellBook(*spellBook))
 }
 
 func GetSpellBooksHandler(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +59,12 @@ func GetSpellBooksHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, spellBooks)
+	var completeSpellBooks []CompleteSpellBook
+	for _, spellBook := range spellBooks {
+		completeSpellBooks = append(completeSpellBooks, BuildCompleteSpellBook(spellBook))
+	}
+
+	StandardResponse(w, completeSpellBooks)
 }
 
 func PostSpellBookHandler(w http.ResponseWriter, r *http.Request) {
