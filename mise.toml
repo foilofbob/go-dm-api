@@ -1,14 +1,14 @@
 [tools]
-go = "1.24"
+go = "1.26"
 
 [tasks.install-gomigrate]
 description = "installs golang-migrate"
-tools.go = "1.24"
+tools.go = "1.26"
 run = "go install -tags mysql github.com/golang-migrate/migrate/v4/cmd/migrate@latest"
 
 [tasks.install-air]
 description = "installs air, for hot reloading"
-tools.go = "1.24"
+tools.go = "1.26"
 run = "go install github.com/air-verse/air@latest"
 
 [tasks.create-migration]
