@@ -3,10 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"go_dm_api/domain"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func GetPlayersHandler(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +45,7 @@ func PostCharacterHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var character domain.Character
 	json.NewDecoder(r.Body).Decode(&character)
@@ -75,7 +76,7 @@ func PutCharacterHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	fmt.Println("Received PUT Character Request")
 
@@ -114,7 +115,7 @@ func DeleteCharacterHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["characterId"]

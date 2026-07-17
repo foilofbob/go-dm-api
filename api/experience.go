@@ -3,10 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"go_dm_api/domain"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func GetExperiencesHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +30,7 @@ func PostExperienceHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var experience domain.Experience
 	json.NewDecoder(r.Body).Decode(&experience)
@@ -71,7 +72,7 @@ func PutExperienceHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var experience domain.Experience
 	json.NewDecoder(r.Body).Decode(&experience)
@@ -113,7 +114,7 @@ func DeleteExperienceHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	// TODO: If finalized, return error
 
@@ -135,7 +136,7 @@ func DeleteExperienceClearFinalizedHandler(w http.ResponseWriter, r *http.Reques
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	campaignIdStr := vars["campaignId"]

@@ -3,10 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"go_dm_api/domain"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func GetLocationsHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +30,7 @@ func PostLocationHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var location domain.Location
 	json.NewDecoder(r.Body).Decode(&location)
@@ -49,7 +50,7 @@ func PutLocationHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var location domain.Location
 	json.NewDecoder(r.Body).Decode(&location)
@@ -69,7 +70,7 @@ func DeleteLocationHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["locationId"]

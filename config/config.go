@@ -2,14 +2,16 @@ package config
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"log"
 	"os"
+
+	"gopkg.in/yaml.v2"
 )
 
 type Config struct {
 	Server   Server   `yaml:"server"`
 	Database Database `yaml:"database"`
+	JWT      JWT      `yaml:"jwt"`
 }
 
 type Server struct {
@@ -22,6 +24,10 @@ type Database struct {
 	Password string `yaml:"pass"`
 	DB       string `yaml:"db"`
 	Driver   string `yaml:"driver"`
+}
+
+type JWT struct {
+	Secret string `yaml:"secret"`
 }
 
 var currentConfig = Config{

@@ -3,10 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"go_dm_api/domain"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 type completeCampaign struct {
@@ -20,7 +21,7 @@ type completeCampaign struct {
 
 func GetCampaignHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	idStr := vars["id"]
+	idStr := vars["campaignId"]
 
 	campaignId, err := strconv.Atoi(idStr)
 
@@ -78,7 +79,7 @@ func PostCampaignHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var campaign domain.Campaign
 	json.NewDecoder(r.Body).Decode(&campaign)

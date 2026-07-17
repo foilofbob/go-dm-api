@@ -3,10 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"go_dm_api/domain"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func GetSublocationsHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +30,7 @@ func PostSublocationHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var sublocation domain.Sublocation
 	json.NewDecoder(r.Body).Decode(&sublocation)
@@ -49,7 +50,7 @@ func PutSublocationHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var sublocation domain.Sublocation
 	json.NewDecoder(r.Body).Decode(&sublocation)
@@ -69,7 +70,7 @@ func DeleteSublocationHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["sublocationId"]

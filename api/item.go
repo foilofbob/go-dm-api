@@ -3,10 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"go_dm_api/domain"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func GetItemsHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +30,7 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var item domain.Item
 	json.NewDecoder(r.Body).Decode(&item)
@@ -49,7 +50,7 @@ func PutItemHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var item domain.Item
 	json.NewDecoder(r.Body).Decode(&item)
@@ -69,7 +70,7 @@ func DeleteItemHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["itemId"]

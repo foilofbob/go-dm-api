@@ -3,10 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"go_dm_api/domain"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func GetCategoriesHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +30,7 @@ func PostCategoryHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var category domain.Category
 	json.NewDecoder(r.Body).Decode(&category)
@@ -49,7 +50,7 @@ func PutCategoryHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var category domain.Category
 	json.NewDecoder(r.Body).Decode(&category)
@@ -69,7 +70,7 @@ func DeleteCategoryHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["categoryId"]

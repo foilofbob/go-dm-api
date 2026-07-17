@@ -3,10 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"go_dm_api/domain"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 // GetNoteHandler Do we actually need to fetch a single note?
@@ -46,7 +47,7 @@ func PostNoteHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var note domain.Note
 	json.NewDecoder(r.Body).Decode(&note)
@@ -66,7 +67,7 @@ func PutNoteHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var note domain.Note
 	json.NewDecoder(r.Body).Decode(&note)
@@ -86,7 +87,7 @@ func DeleteNoteHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["noteId"]

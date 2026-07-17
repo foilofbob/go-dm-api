@@ -11,3 +11,7 @@ database:
   pass: "PASSWORD"
   db: "dm_campaign_manager"
   driver: "mysql"
+
+# JWT encryption key
+jwt:
+  secret: "CHANGE_ME"

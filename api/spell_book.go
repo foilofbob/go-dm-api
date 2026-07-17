@@ -3,10 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"go_dm_api/domain"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 type CompleteSpellBook struct {
@@ -72,7 +73,7 @@ func PostSpellBookHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var spellBook domain.SpellBook
 	json.NewDecoder(r.Body).Decode(&spellBook)
@@ -93,7 +94,7 @@ func PutSpellBookHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var spellBook domain.SpellBook
 	json.NewDecoder(r.Body).Decode(&spellBook)
@@ -114,7 +115,7 @@ func DeleteSpellBookHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["spellBookId"]

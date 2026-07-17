@@ -2,10 +2,11 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"go_dm_api/domain"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func PostSpellBookEntryHandler(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +14,7 @@ func PostSpellBookEntryHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	var spellBookEntry domain.SpellBookEntry
 	json.NewDecoder(r.Body).Decode(&spellBookEntry)
@@ -33,7 +34,7 @@ func DeleteSpellBookEntryHandler(w http.ResponseWriter, r *http.Request) {
 		StandardResponse(w, nil)
 		return
 	}
-	enableCORS(&w)
+	EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["spellBookEntryId"]
