@@ -55,7 +55,7 @@ func GenerateJWT(userID, username, role string) (string, error) {
 		Username: username,
 		Role:     role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(20 * time.Minute)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(60 * time.Minute)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 			Issuer:    "go-dm-auth",
@@ -108,7 +108,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expires := time.Now().Add(30 * time.Minute)
+	expires := time.Now().Add(90 * time.Minute)
 
 	http.SetCookie(w, &http.Cookie{
 		Name:     "dm_token",
@@ -252,7 +252,7 @@ func CampaignAccessMiddleware(next http.Handler) http.Handler {
 		http.SetCookie(w, &http.Cookie{
 			Name:     "dm_token",
 			Value:    tokenString,
-			Expires:  time.Now().Add(30 * time.Minute),
+			Expires:  time.Now().Add(90 * time.Minute),
 			HttpOnly: true,
 			Secure:   true,
 			Path:     "/",
