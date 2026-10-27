@@ -78,3 +78,13 @@ We're using [air](https://github.com/air-verse/air) for hot reloading, run the a
 Or don't: `go run main.go`
 
 Exercise it with curl: `curl http://localhost:8090/note/1` (or `curl.exe http://localhost:8090/note/1` on Windows)
+
+## Mobile Setup
+- Install termux (app store)
+- Update: `pkg update && pkg upgrade -y;`
+- Install git: `pkg install git -y;`
+- Install mise: `pkg install mise -y;`
+- Install mariadb: `pkg install mariadb -y;`
+- Need to setup the DB, best to use a dump...
+- Compile the executable on a laptop targeting android
+- Install server: `npm install --global serve`

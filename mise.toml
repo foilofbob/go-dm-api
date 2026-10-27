@@ -54,3 +54,7 @@ run = "air"
 [tasks.hash-password]
 description = 'Must supply the password like: -password="abc123"'
 run ="go run .\\cmd\\argon_hasher"
+
+[tasks.build-mobile]
+env = { GOOS = "android", GOARCH = "arm64", CGO_ENABLED = "0" }
+run = "go build -o mobile.exe main.go"
