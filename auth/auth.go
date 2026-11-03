@@ -16,6 +16,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
+const dmTokenString string = "dm_token"
+const dmRefreshString string = "dm_refresh"
+const dmTokenDuration time.Duration = 30 * time.Minute
+const dmRefreshDuration time.Duration = 12 * time.Hour
+
 var jwtSecretKey = []byte(config.Cfg().JWT.Secret)
 
 var argonParams = &argon2id.Params{
@@ -102,18 +107,36 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tokenString, err := GenerateJWT(fmt.Sprintf("%d", user.ID), user.Username, "DM")
+	sessionTokenString, err := GenerateJWT(fmt.Sprintf("%d", user.ID), user.Username, "DM")
 	if err != nil {
 		http.Error(w, "Internal Error", http.StatusInternalServerError)
 		return
 	}
 
-	expires := time.Now().Add(90 * time.Minute)
+	expires := time.Now().Add(dmTokenDuration)
 
 	http.SetCookie(w, &http.Cookie{
-		Name:     "dm_token",
-		Value:    tokenString,
+		Name:     dmTokenString,
+		Value:    sessionTokenString,
 		Expires:  expires,
+		HttpOnly: true,
+		Secure:   true,
+		Path:     "/",
+		//SameSite: http.SameSiteStrictMode,
+	})
+
+	refreshTokenString, err := GenerateJWT(fmt.Sprintf("%d", user.ID), user.Username, "DM")
+	if err != nil {
+		http.Error(w, "Internal Error", http.StatusInternalServerError)
+		return
+	}
+
+	refreshExpires := time.Now().Add(dmRefreshDuration)
+
+	http.SetCookie(w, &http.Cookie{
+		Name:     dmRefreshString,
+		Value:    refreshTokenString,
+		Expires:  refreshExpires,
 		HttpOnly: true,
 		Secure:   true,
 		Path:     "/",
@@ -131,8 +154,8 @@ func HandleLogout(w http.ResponseWriter, r *http.Request) {
 	}
 	api.EnableCORS(&w)
 
-	expiredCookie := &http.Cookie{
-		Name:     "dm_token",
+	expiredSessionCookie := &http.Cookie{
+		Name:     dmTokenString,
 		Value:    "",
 		Path:     "/",
 		MaxAge:   -1,
@@ -141,7 +164,19 @@ func HandleLogout(w http.ResponseWriter, r *http.Request) {
 		Secure:   true,
 		SameSite: http.SameSiteLaxMode,
 	}
-	http.SetCookie(w, expiredCookie)
+	http.SetCookie(w, expiredSessionCookie)
+
+	expiredRefreshCookie := &http.Cookie{
+		Name:     dmRefreshString,
+		Value:    "",
+		Path:     "/",
+		MaxAge:   -1,
+		Expires:  time.Unix(0, 0),
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	}
+	http.SetCookie(w, expiredRefreshCookie)
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -156,7 +191,7 @@ func UserAccessMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		cookie, err := r.Cookie("dm_token")
+		cookie, err := r.Cookie(dmTokenString)
 		if err != nil {
 			fmt.Println("(UserAccess) Could not parse cookie: ", err.Error())
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
@@ -196,7 +231,7 @@ func CampaignAccessMiddleware(next http.Handler) http.Handler {
 		campaignIDStr := vars["campaignId"]
 		campaignID, err := strconv.Atoi(campaignIDStr)
 
-		cookie, err := r.Cookie("dm_token")
+		cookie, err := r.Cookie(dmTokenString)
 		if err != nil {
 			fmt.Println("(CampaignAccess) Could not parse cookie: ", err.Error())
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
@@ -240,25 +275,77 @@ func CampaignAccessMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		// Renew cookie
-		// TODO: Implement refresh token pattern
-		user, err := domain.GetUser(userID)
-		tokenString, err := GenerateJWT(rawUserID, user.Username, "DM")
-		if err != nil {
-			http.Error(w, "Internal Error", http.StatusInternalServerError)
-			return
-		}
-
-		http.SetCookie(w, &http.Cookie{
-			Name:     "dm_token",
-			Value:    tokenString,
-			Expires:  time.Now().Add(90 * time.Minute),
-			HttpOnly: true,
-			Secure:   true,
-			Path:     "/",
-			//SameSite: http.SameSiteStrictMode,
-		})
-
 		next.ServeHTTP(w, r)
 	})
+}
+
+func HandleTokenRefresh(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		api.StandardResponse(w, nil)
+		return
+	}
+	api.EnableCORS(&w)
+
+	// verify refresh token
+	cookie, err := r.Cookie(dmRefreshString)
+	if err != nil {
+		fmt.Println("(CampaignAccess) Could not parse cookie: ", err.Error())
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	token, err := jwt.ParseWithClaims(cookie.Value, &CustomClaims{}, func(t *jwt.Token) (any, error) {
+		return jwtSecretKey, nil
+	})
+
+	if err != nil || !token.Valid {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	// extract user
+	claims, ok := token.Claims.(*CustomClaims)
+
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	rawUserID := claims.UserID
+	userID, err := strconv.Atoi(rawUserID)
+
+	if err != nil {
+		fmt.Printf("Could not parse userID (%s): %s\n", rawUserID, err.Error())
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
+
+	user, err := domain.GetUser(userID)
+	if err != nil {
+		fmt.Printf("Could not find user for userID (%s): %s\n", rawUserID, err.Error())
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
+
+	// generate new session token
+	tokenString, err := GenerateJWT(fmt.Sprintf("%d", user.ID), user.Username, "DM")
+	if err != nil {
+		http.Error(w, "Internal Error", http.StatusInternalServerError)
+		return
+	}
+
+	expires := time.Now().Add(dmTokenDuration)
+
+	http.SetCookie(w, &http.Cookie{
+		Name:     dmTokenString,
+		Value:    tokenString,
+		Expires:  expires,
+		HttpOnly: true,
+		Secure:   true,
+		Path:     "/",
+		//SameSite: http.SameSiteStrictMode,
+	})
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"username": user.Username, "expires": expires.Format(time.RFC3339)})
 }

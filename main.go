@@ -21,6 +21,7 @@ func main() {
 
 	r.HandleFunc("/login", auth.HandleLogin).Methods("POST", "OPTIONS")
 	r.HandleFunc("/logout", auth.HandleLogout).Methods("POST", "OPTIONS")
+	r.HandleFunc("/refresh", auth.HandleTokenRefresh).Methods("POST", "OPTIONS")
 
 	authenticated := r.PathPrefix("/").Subrouter()
 	authenticated.Use(auth.UserAccessMiddleware)
