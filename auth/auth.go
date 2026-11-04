@@ -54,13 +54,13 @@ type CustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(userID, username, role string) (string, error) {
+func GenerateJWT(userID, username, role string, duration time.Duration) (string, error) {
 	claims := CustomClaims{
 		UserID:   userID,
 		Username: username,
 		Role:     role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(60 * time.Minute)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 			Issuer:    "go-dm-auth",
@@ -107,7 +107,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sessionTokenString, err := GenerateJWT(fmt.Sprintf("%d", user.ID), user.Username, "DM")
+	sessionTokenString, err := GenerateJWT(fmt.Sprintf("%d", user.ID), user.Username, "DM", dmTokenDuration)
 	if err != nil {
 		http.Error(w, "Internal Error", http.StatusInternalServerError)
 		return
@@ -125,7 +125,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 		//SameSite: http.SameSiteStrictMode,
 	})
 
-	refreshTokenString, err := GenerateJWT(fmt.Sprintf("%d", user.ID), user.Username, "DM")
+	refreshTokenString, err := GenerateJWT(fmt.Sprintf("%d", user.ID), user.Username, "DM", dmRefreshDuration)
 	if err != nil {
 		http.Error(w, "Internal Error", http.StatusInternalServerError)
 		return
@@ -328,7 +328,7 @@ func HandleTokenRefresh(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// generate new session token
-	tokenString, err := GenerateJWT(fmt.Sprintf("%d", user.ID), user.Username, "DM")
+	tokenString, err := GenerateJWT(fmt.Sprintf("%d", user.ID), user.Username, "DM", dmTokenDuration)
 	if err != nil {
 		http.Error(w, "Internal Error", http.StatusInternalServerError)
 		return
