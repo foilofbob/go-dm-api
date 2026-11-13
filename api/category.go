@@ -22,7 +22,7 @@ func GetCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, categories)
+	StandardResponseWithNotes(w, categories, campaignId, "MISCELLANEOUS")
 }
 
 func PostCategoryHandler(w http.ResponseWriter, r *http.Request) {

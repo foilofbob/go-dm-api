@@ -22,7 +22,7 @@ func GetLocationsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, locations)
+	StandardResponseWithNotes(w, locations, campaignId, "LOCATION")
 }
 
 func PostLocationHandler(w http.ResponseWriter, r *http.Request) {

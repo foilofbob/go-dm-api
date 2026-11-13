@@ -22,7 +22,7 @@ func GetPlayersHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, characters)
+	StandardResponseWithNotes(w, characters, campaignId, "CHARACTER")
 }
 
 func GetNPCsHandler(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +37,7 @@ func GetNPCsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, characters)
+	StandardResponseWithNotes(w, characters, campaignId, "CHARACTER")
 }
 
 func PostCharacterHandler(w http.ResponseWriter, r *http.Request) {

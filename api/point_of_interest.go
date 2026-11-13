@@ -22,7 +22,7 @@ func GetPointsOfInterestHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, pointsOfInterest)
+	StandardResponseWithNotes(w, pointsOfInterest, campaignId, "POINT_OF_INTEREST")
 }
 
 func PostPointOfInterestHandler(w http.ResponseWriter, r *http.Request) {

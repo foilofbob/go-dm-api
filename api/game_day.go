@@ -28,9 +28,10 @@ func GetGameDaysHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, gameDays)
+	StandardResponseWithNotes(w, gameDays, campaignId, "GAME_DAY")
 }
 
+// TODO: Does this flow still work without the subsequent Notes fetch?
 // PostInitializeGameDayHandler This endpoint is for creating the first game day of a campaign
 func PostInitializeGameDayHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
