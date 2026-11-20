@@ -4,6 +4,7 @@
 server:
   host: "localhost"
   port: "8090"
+  cors: "8280"
 
 # Database credentials
 database:

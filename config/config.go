@@ -17,6 +17,7 @@ type Config struct {
 type Server struct {
 	Port string `yaml:"port"`
 	Host string `yaml:"host"`
+	Cors string `yaml:"cors"`
 }
 
 type Database struct {
@@ -34,6 +35,7 @@ var currentConfig = Config{
 	Server: Server{
 		Port: "123",
 		Host: "localhost",
+		Cors: "123",
 	},
 	Database: Database{
 		Username: "db",
@@ -43,7 +45,40 @@ var currentConfig = Config{
 	},
 }
 
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
+
 func InitConfig() {
+
+	env := getEnv("ENV", "local")
+
+	if env == "local" {
+		// For local dev read from config
+		f, err := os.Open("config/config.yml")
+		if err != nil {
+			log.Println(fmt.Sprintf("Error opening config: %s", err.Error()))
+		}
+		defer f.Close()
+
+		decoder := yaml.NewDecoder(f)
+		err = decoder.Decode(&currentConfig)
+		if err != nil {
+			log.Println(fmt.Sprintf("Error decoding config: %s", err.Error()))
+		}
+	} else {
+		// For deployment read from environment variables
+		currentConfig.Database.DB = getEnv("HOST", "localhost")
+		currentConfig.Database.DB = getEnv("PORT", "8090")
+		currentConfig.Database.DB = getEnv("CORS", "8280")
+		currentConfig.Database.DB = getEnv("DB_NAME", "dm_campaign_manager")
+		currentConfig.Database.Username = getEnv("DB_USERNAME", "db")
+		currentConfig.Database.Password = getEnv("DB_PASSWORD", "pass")
+	}
+
 	f, err := os.Open("config/config.yml")
 	if err != nil {
 		log.Println(fmt.Sprintf("Error opening config: %s", err.Error()))
@@ -59,6 +94,10 @@ func InitConfig() {
 
 func Cfg() Config {
 	return currentConfig
+}
+
+func Origin() string {
+	return fmt.Sprintf("http://%s:%s", currentConfig.Server.Host, currentConfig.Server.Cors)
 }
 
 func DBDriver() string {
