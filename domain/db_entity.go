@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"go_dm_api/config"
+
+	"github.com/go-sql-driver/mysql"
 )
 
 func GetByID(tableName string, id int) *sql.Row {
@@ -31,7 +33,18 @@ func DBExec(execStr string, args ...any) (sql.Result, error) {
 }
 
 func DBConnection() *sql.DB {
-	db, err := sql.Open(config.DBDriver(), config.DBConnectString())
+	cfg := config.Cfg()
+
+	dbcfg := mysql.NewConfig()
+	dbcfg.User = cfg.Database.Username
+	dbcfg.Passwd = cfg.Database.Password
+	//dbcfg.Net = "tcp"
+	dbcfg.Addr = fmt.Sprintf("%s:%s", cfg.Database.Host, cfg.Database.Port)
+	dbcfg.DBName = cfg.Database.DB
+	dbcfg.MultiStatements = true // Required for golang-migrate
+
+	db, err := sql.Open(config.DBDriver(), dbcfg.FormatDSN())
+	//db, err := sql.Open(config.DBDriver(), config.DBConnectString())
 	if err != nil {
 		panic(err.Error())
 	}

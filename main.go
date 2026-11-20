@@ -1,22 +1,64 @@
 package main
 
 import (
+	"embed"
+	"errors"
+	"fmt"
 	"go_dm_api/api"
 	"go_dm_api/auth"
 	"go_dm_api/config"
+	"go_dm_api/domain"
 	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/source/iofs"
 
-	//"github.com/gorilla/handlers"
+	mysqlmigrate "github.com/golang-migrate/migrate/v4/database/mysql"
+
 	"github.com/gorilla/mux"
 )
 
-// After adding all the backend auth, frontend just needs to include {:with-credentials? true} in theory
+//go:embed db/migrations/*.sql
+var migrationsFS embed.FS
+
+func runMigrations() error {
+	db := domain.DBConnection()
+	defer db.Close()
+
+	driver, err := mysqlmigrate.WithInstance(db, &mysqlmigrate.Config{})
+	if err != nil {
+		return err
+	}
+
+	source, err := iofs.New(migrationsFS, "db/migrations")
+	if err != nil {
+		return err
+	}
+
+	m, err := migrate.NewWithInstance("iofs", source, "mysql", driver)
+	if err != nil {
+		return err
+	}
+
+	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		return err
+	}
+	return nil
+}
 
 func main() {
 	config.InitConfig()
+
+	log.Println("Applying any new migrations...")
+	err := runMigrations()
+	if err != nil {
+		log.Println(fmt.Sprintf("Error applying migrations: %s", err.Error()))
+	} else {
+		log.Println("Finished with migrations.")
+	}
+
 	r := mux.NewRouter()
 
 	r.HandleFunc("/login", auth.HandleLogin).Methods("POST", "OPTIONS")

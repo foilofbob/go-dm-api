@@ -15,12 +15,14 @@ type Config struct {
 }
 
 type Server struct {
-	Port string `yaml:"port"`
-	Host string `yaml:"host"`
-	Cors string `yaml:"cors"`
+	Port   string `yaml:"port"`
+	Host   string `yaml:"host"`
+	Origin string `yaml:"origin"`
 }
 
 type Database struct {
+	Port     string `yaml:"port"`
+	Host     string `yaml:"host"`
 	Username string `yaml:"user"`
 	Password string `yaml:"pass"`
 	DB       string `yaml:"db"`
@@ -33,9 +35,9 @@ type JWT struct {
 
 var currentConfig = Config{
 	Server: Server{
-		Port: "123",
-		Host: "localhost",
-		Cors: "123",
+		Port:   "123",
+		Host:   "localhost",
+		Origin: "http://localhost:8280",
 	},
 	Database: Database{
 		Username: "db",
@@ -71,9 +73,11 @@ func InitConfig() {
 		}
 	} else {
 		// For deployment read from environment variables
-		currentConfig.Database.DB = getEnv("HOST", "localhost")
-		currentConfig.Database.DB = getEnv("PORT", "8090")
-		currentConfig.Database.DB = getEnv("CORS", "8280")
+		currentConfig.Server.Host = getEnv("HOST", "localhost")
+		currentConfig.Server.Port = getEnv("PORT", "8090")
+		currentConfig.Server.Origin = getEnv("ORIGIN", "http://localhost:8280")
+		currentConfig.Database.Host = getEnv("DB_HOST", "localhost")
+		currentConfig.Database.Port = getEnv("DB_PORT", "3306")
 		currentConfig.Database.DB = getEnv("DB_NAME", "dm_campaign_manager")
 		currentConfig.Database.Username = getEnv("DB_USERNAME", "db")
 		currentConfig.Database.Password = getEnv("DB_PASSWORD", "pass")
@@ -85,7 +89,7 @@ func Cfg() Config {
 }
 
 func Origin() string {
-	return fmt.Sprintf("http://%s:%s", currentConfig.Server.Host, currentConfig.Server.Cors)
+	return currentConfig.Server.Origin
 }
 
 func DBDriver() string {

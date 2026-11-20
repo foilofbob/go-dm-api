@@ -48,7 +48,7 @@ description = "MAC Specific - reverts all migrations, can pass in an integer to 
 run = 'migrate -path db/migrations -database "mysql://dm_tool:{{option(name=`pw`)}}@tcp(localhost:3306)/dm_campaign_manager_test" down {{option(name=`x`)}}'
 
 [tasks.default]
-description = "run the app with hot reloading - requires air to be installed"
+description = "run the app with hot reloading - requires air to be installed. Executable placed in tmp."
 run = "air"
 
 [tasks.hash-password]
@@ -58,3 +58,6 @@ run ="go run .\\cmd\\argon_hasher"
 [tasks.build-mobile]
 env = { GOOS = "android", GOARCH = "arm64", CGO_ENABLED = "0" }
 run = "go build -o mobile.exe main.go"
+
+[tasks.build]
+run = "go build -o main.exe main.go"
