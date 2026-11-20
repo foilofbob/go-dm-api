@@ -38,7 +38,7 @@ func DBConnection() *sql.DB {
 	dbcfg := mysql.NewConfig()
 	dbcfg.User = cfg.Database.Username
 	dbcfg.Passwd = cfg.Database.Password
-	//dbcfg.Net = "tcp"
+	dbcfg.Net = "tcp"
 	dbcfg.Addr = fmt.Sprintf("%s:%s", cfg.Database.Host, cfg.Database.Port)
 	dbcfg.DBName = cfg.Database.DB
 	dbcfg.MultiStatements = true // Required for golang-migrate
