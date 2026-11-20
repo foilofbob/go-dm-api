@@ -78,18 +78,6 @@ func InitConfig() {
 		currentConfig.Database.Username = getEnv("DB_USERNAME", "db")
 		currentConfig.Database.Password = getEnv("DB_PASSWORD", "pass")
 	}
-
-	f, err := os.Open("config/config.yml")
-	if err != nil {
-		log.Println(fmt.Sprintf("Error opening config: %s", err.Error()))
-	}
-	defer f.Close()
-
-	decoder := yaml.NewDecoder(f)
-	err = decoder.Decode(&currentConfig)
-	if err != nil {
-		log.Println(fmt.Sprintf("Error decoding config: %s", err.Error()))
-	}
 }
 
 func Cfg() Config {
