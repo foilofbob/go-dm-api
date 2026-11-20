@@ -44,7 +44,6 @@ func DBConnection() *sql.DB {
 	dbcfg.MultiStatements = true // Required for golang-migrate
 
 	db, err := sql.Open(config.DBDriver(), dbcfg.FormatDSN())
-	//db, err := sql.Open(config.DBDriver(), config.DBConnectString())
 	if err != nil {
 		panic(err.Error())
 	}

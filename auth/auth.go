@@ -116,6 +116,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	expires := time.Now().Add(dmTokenDuration)
 
 	http.SetCookie(w, &http.Cookie{
+		Domain:   config.Cfg().Server.Host,
 		Name:     dmTokenString,
 		Value:    sessionTokenString,
 		Expires:  expires,
@@ -134,6 +135,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	refreshExpires := time.Now().Add(dmRefreshDuration)
 
 	http.SetCookie(w, &http.Cookie{
+		Domain:   config.Cfg().Server.Host,
 		Name:     dmRefreshString,
 		Value:    refreshTokenString,
 		Expires:  refreshExpires,
@@ -155,6 +157,7 @@ func HandleLogout(w http.ResponseWriter, r *http.Request) {
 	api.EnableCORS(&w)
 
 	expiredSessionCookie := &http.Cookie{
+		Domain:   config.Cfg().Server.Host,
 		Name:     dmTokenString,
 		Value:    "",
 		Path:     "/",
@@ -167,6 +170,7 @@ func HandleLogout(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, expiredSessionCookie)
 
 	expiredRefreshCookie := &http.Cookie{
+		Domain:   config.Cfg().Server.Host,
 		Name:     dmRefreshString,
 		Value:    "",
 		Path:     "/",
@@ -337,6 +341,7 @@ func HandleTokenRefresh(w http.ResponseWriter, r *http.Request) {
 	expires := time.Now().Add(dmTokenDuration)
 
 	http.SetCookie(w, &http.Cookie{
+		Domain:   config.Cfg().Server.Host,
 		Name:     dmTokenString,
 		Value:    tokenString,
 		Expires:  expires,

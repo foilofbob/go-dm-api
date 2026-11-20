@@ -20,6 +20,7 @@ func StandardResponse(w http.ResponseWriter, v any) {
 	w.Header().Set("Access-Control-Allow-Origin", config.Origin())
 	w.Header().Set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	w.Header().Set("Vary", "Origin")
 	json.NewEncoder(w).Encode(v)
 }
 
@@ -40,4 +41,5 @@ func EnableCORS(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Cache-Control, Content-Type, Origin, User-Agent")
 	(*w).Header().Set("Access-Control-Allow-Credentials", "true")
+	(*w).Header().Set("Vary", "Origin")
 }

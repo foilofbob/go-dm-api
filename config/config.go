@@ -47,7 +47,7 @@ var currentConfig = Config{
 	},
 }
 
-func getEnv(key, fallback string) string {
+func GetEnv(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
 		return value
 	}
@@ -56,7 +56,7 @@ func getEnv(key, fallback string) string {
 
 func InitConfig() {
 
-	env := getEnv("ENV", "local")
+	env := GetEnv("ENV", "local")
 
 	if env == "local" {
 		// For local dev read from config
@@ -73,14 +73,14 @@ func InitConfig() {
 		}
 	} else {
 		// For deployment read from environment variables
-		currentConfig.Server.Host = getEnv("HOST", "localhost")
-		currentConfig.Server.Port = getEnv("PORT", "8090")
-		currentConfig.Server.Origin = getEnv("ORIGIN", "http://localhost:8280")
-		currentConfig.Database.Host = getEnv("DB_HOST", "localhost")
-		currentConfig.Database.Port = getEnv("DB_PORT", "3306")
-		currentConfig.Database.DB = getEnv("DB_NAME", "dm_campaign_manager")
-		currentConfig.Database.Username = getEnv("DB_USERNAME", "db")
-		currentConfig.Database.Password = getEnv("DB_PASSWORD", "pass")
+		currentConfig.Server.Host = GetEnv("HOST", "localhost")
+		currentConfig.Server.Port = GetEnv("PORT", "8090")
+		currentConfig.Server.Origin = GetEnv("ORIGIN", "http://localhost:8280")
+		currentConfig.Database.Host = GetEnv("DB_HOST", "localhost")
+		currentConfig.Database.Port = GetEnv("DB_PORT", "3306")
+		currentConfig.Database.DB = GetEnv("DB_NAME", "dm_campaign_manager")
+		currentConfig.Database.Username = GetEnv("DB_USERNAME", "db")
+		currentConfig.Database.Password = GetEnv("DB_PASSWORD", "pass")
 	}
 }
 
