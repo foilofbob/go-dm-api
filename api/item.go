@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -22,15 +23,15 @@ func GetItemsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, items)
+	utils.StandardResponse(w, items)
 }
 
 func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var item domain.Item
 	json.NewDecoder(r.Body).Decode(&item)
@@ -42,15 +43,15 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newItem)
+	utils.StandardResponse(w, newItem)
 }
 
 func PutItemHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var item domain.Item
 	json.NewDecoder(r.Body).Decode(&item)
@@ -62,15 +63,15 @@ func PutItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, updateItem)
+	utils.StandardResponse(w, updateItem)
 }
 
 func DeleteItemHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["itemId"]

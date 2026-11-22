@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -28,17 +29,17 @@ func GetGameDaysHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponseWithNotes(w, gameDays, campaignId, "GAME_DAY")
+	utils.StandardResponseWithNotes(w, gameDays, campaignId, "GAME_DAY")
 }
 
 // TODO: Does this flow still work without the subsequent Notes fetch?
 // PostInitializeGameDayHandler This endpoint is for creating the first game day of a campaign
 func PostInitializeGameDayHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var initializeGameDay domain.InitializeGameDay
 	json.NewDecoder(r.Body).Decode(&initializeGameDay)
@@ -75,16 +76,16 @@ func PostInitializeGameDayHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newGameDay)
+	utils.StandardResponse(w, newGameDay)
 }
 
 // PostGameDayHandler For a campaign that is already up and running, this endpoint adds the next consecutive day
 func PostGameDayHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["campaignId"]
@@ -119,5 +120,5 @@ func PostGameDayHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newGameDay)
+	utils.StandardResponse(w, newGameDay)
 }

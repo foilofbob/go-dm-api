@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -22,15 +23,15 @@ func GetExperiencesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, experiences)
+	utils.StandardResponse(w, experiences)
 }
 
 func PostExperienceHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var experience domain.Experience
 	json.NewDecoder(r.Body).Decode(&experience)
@@ -64,15 +65,15 @@ func PostExperienceHandler(w http.ResponseWriter, r *http.Request) {
 	responseMap["campaignXP"] = campaignXP
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, responseMap)
+	utils.StandardResponse(w, responseMap)
 }
 
 func PutExperienceHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var experience domain.Experience
 	json.NewDecoder(r.Body).Decode(&experience)
@@ -106,15 +107,15 @@ func PutExperienceHandler(w http.ResponseWriter, r *http.Request) {
 	responseMap["campaignXP"] = campaignXP
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, responseMap)
+	utils.StandardResponse(w, responseMap)
 }
 
 func DeleteExperienceHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	// TODO: If finalized, return error
 
@@ -133,10 +134,10 @@ func DeleteExperienceHandler(w http.ResponseWriter, r *http.Request) {
 
 func DeleteExperienceClearFinalizedHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	campaignIdStr := vars["campaignId"]

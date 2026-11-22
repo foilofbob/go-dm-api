@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -22,7 +23,7 @@ func GetPlayersHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponseWithNotes(w, characters, campaignId, "CHARACTER")
+	utils.StandardResponseWithNotes(w, characters, campaignId, "CHARACTER")
 }
 
 func GetNPCsHandler(w http.ResponseWriter, r *http.Request) {
@@ -37,15 +38,15 @@ func GetNPCsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponseWithNotes(w, characters, campaignId, "CHARACTER")
+	utils.StandardResponseWithNotes(w, characters, campaignId, "CHARACTER")
 }
 
 func PostCharacterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var character domain.Character
 	json.NewDecoder(r.Body).Decode(&character)
@@ -68,15 +69,15 @@ func PostCharacterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newCharacter)
+	utils.StandardResponse(w, newCharacter)
 }
 
 func PutCharacterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	fmt.Println("Received PUT Character Request")
 
@@ -107,15 +108,15 @@ func PutCharacterHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Completed PUT Character Request")
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, updateItem)
+	utils.StandardResponse(w, updateItem)
 }
 
 func DeleteCharacterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["characterId"]

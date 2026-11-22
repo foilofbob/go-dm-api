@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -23,7 +24,7 @@ func GetNoteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, note)
+	utils.StandardResponse(w, note)
 }
 
 func GetNotesHandler(w http.ResponseWriter, r *http.Request) {
@@ -39,15 +40,15 @@ func GetNotesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, notes)
+	utils.StandardResponse(w, notes)
 }
 
 func PostNoteHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var note domain.Note
 	json.NewDecoder(r.Body).Decode(&note)
@@ -59,15 +60,15 @@ func PostNoteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newNote)
+	utils.StandardResponse(w, newNote)
 }
 
 func PutNoteHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var note domain.Note
 	json.NewDecoder(r.Body).Decode(&note)
@@ -79,15 +80,15 @@ func PutNoteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, updatedNote)
+	utils.StandardResponse(w, updatedNote)
 }
 
 func DeleteNoteHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["noteId"]

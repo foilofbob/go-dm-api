@@ -49,3 +49,16 @@ func DBConnection() *sql.DB {
 	}
 	return db
 }
+
+func DeleteByCampaignID(tableName string, campaignID int) error {
+	db := DBConnection()
+	defer db.Close()
+	query := fmt.Sprintf("DELETE FROM `%s` WHERE campaign_id = ?", tableName)
+	_, err := db.Exec(query, campaignID)
+
+	if err != nil {
+		println("DeleteNotesForCampaign error: " + err.Error())
+	}
+
+	return err
+}

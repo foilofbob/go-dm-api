@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"fmt"
 	"math"
 )
 
@@ -62,6 +63,31 @@ func CreateCampaign(name string, currentXp int, campaignSettingID int) (*Campaig
 	}
 
 	return GetCampaign(int(lid))
+}
+
+func DeleteCampaign(campaignID int) error {
+	toDelete := []string{"note", "game_day", "campaign_calendar_cycle_offset", "item", "character", "experience",
+		"point_of_interest", "sublocation", "location", "category", "spell_book", "user_permission"}
+	for _, tableName := range toDelete {
+		fmt.Println(fmt.Sprintf("Deleting %s entries for campaign %d", tableName, campaignID))
+		err := DeleteByCampaignID(tableName, campaignID)
+		if err != nil {
+			fmt.Println(fmt.Sprintf("Error deleting %s entries for campaign %d: %s", tableName, campaignID, err.Error()))
+			return err
+		}
+	}
+
+	db := DBConnection()
+	defer db.Close()
+
+	query := "DELETE FROM campaign WHERE id = ?"
+	_, deleteErr := db.Exec(query, campaignID)
+
+	if deleteErr != nil {
+		println("Delete campaign error: " + deleteErr.Error())
+	}
+
+	return deleteErr
 }
 
 func UpdateCurrentPlayerXP(campaignID int, experience int) (int, error) {

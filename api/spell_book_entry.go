@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -11,10 +12,10 @@ import (
 
 func PostSpellBookEntryHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var spellBookEntry domain.SpellBookEntry
 	json.NewDecoder(r.Body).Decode(&spellBookEntry)
@@ -26,15 +27,15 @@ func PostSpellBookEntryHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newSpellBookEntry)
+	utils.StandardResponse(w, newSpellBookEntry)
 }
 
 func DeleteSpellBookEntryHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["spellBookEntryId"]

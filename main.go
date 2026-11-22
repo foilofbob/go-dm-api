@@ -75,6 +75,7 @@ func main() {
 	authenticated.HandleFunc("/campaign", api.ListCampaignHandler).Methods("GET")
 	authenticated.HandleFunc("/campaign", api.PostCampaignHandler).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/campaign/{campaignId:[0-9]+}", api.GetCampaignHandler).Methods("GET")
+	protected.HandleFunc("/campaign/{campaignId:[0-9]+}", api.DeleteCampaignHandler).Methods("DELETE", "OPTIONS")
 
 	// CampaignSetting routes
 	authenticated.HandleFunc("/campaign-settings", api.ListCampaignSettingHandler).Methods("GET")

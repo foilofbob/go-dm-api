@@ -3,7 +3,9 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"go_dm_api/auth"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -61,7 +63,7 @@ func GetCampaignHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, completeCampaign{Campaign: *campaign, Months: months, WeekDays: weekDays, CalendarCycles: calendarCycles, CalendarCycleOffsets: calendarCycleOffsets, CalendarEvents: calendarEvents})
+	utils.StandardResponse(w, completeCampaign{Campaign: *campaign, Months: months, WeekDays: weekDays, CalendarCycles: calendarCycles, CalendarCycleOffsets: calendarCycleOffsets, CalendarEvents: calendarEvents})
 }
 
 func ListCampaignHandler(w http.ResponseWriter, _ *http.Request) {
@@ -71,15 +73,15 @@ func ListCampaignHandler(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 
-	StandardResponse(w, campaigns)
+	utils.StandardResponse(w, campaigns)
 }
 
 func PostCampaignHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var campaign domain.Campaign
 	json.NewDecoder(r.Body).Decode(&campaign)
@@ -90,6 +92,31 @@ func PostCampaignHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userId := auth.ExtractUserId(r)
+	if userId != 0 {
+		domain.CreateUserPermission(userId, newCampaign.ID)
+	}
+
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newCampaign)
+	utils.StandardResponse(w, newCampaign)
+}
+
+func DeleteCampaignHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		utils.StandardResponse(w, nil)
+		return
+	}
+	utils.EnableCORS(&w)
+
+	vars := mux.Vars(r)
+	idStr := vars["campaignId"]
+	campaignID, _ := strconv.Atoi(idStr)
+
+	err := domain.DeleteCampaign(campaignID)
+	if err != nil {
+		http.Error(w, "Failed to delete campaign: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -22,15 +23,15 @@ func GetPointsOfInterestHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponseWithNotes(w, pointsOfInterest, campaignId, "POINT_OF_INTEREST")
+	utils.StandardResponseWithNotes(w, pointsOfInterest, campaignId, "POINT_OF_INTEREST")
 }
 
 func PostPointOfInterestHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var poi domain.PointOfInterest
 	json.NewDecoder(r.Body).Decode(&poi)
@@ -42,15 +43,15 @@ func PostPointOfInterestHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newPoi)
+	utils.StandardResponse(w, newPoi)
 }
 
 func PutPointOfInterestHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var poi domain.PointOfInterest
 	json.NewDecoder(r.Body).Decode(&poi)
@@ -62,15 +63,15 @@ func PutPointOfInterestHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, updatedPoi)
+	utils.StandardResponse(w, updatedPoi)
 }
 
 func DeletePointOfInterestHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["pointOfInterestId"]

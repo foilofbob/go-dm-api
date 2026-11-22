@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -22,15 +23,15 @@ func GetSublocationsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, sublocations)
+	utils.StandardResponse(w, sublocations)
 }
 
 func PostSublocationHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var sublocation domain.Sublocation
 	json.NewDecoder(r.Body).Decode(&sublocation)
@@ -42,15 +43,15 @@ func PostSublocationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newSublocation)
+	utils.StandardResponse(w, newSublocation)
 }
 
 func PutSublocationHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var sublocation domain.Sublocation
 	json.NewDecoder(r.Body).Decode(&sublocation)
@@ -62,15 +63,15 @@ func PutSublocationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, updatedSublocation)
+	utils.StandardResponse(w, updatedSublocation)
 }
 
 func DeleteSublocationHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["sublocationId"]

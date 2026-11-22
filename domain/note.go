@@ -85,13 +85,11 @@ func DeleteNote(noteID int) error {
 	defer db.Close()
 
 	query := "DELETE FROM note WHERE id = ?"
-	res, deleteErr := db.Exec(query, noteID)
+	_, deleteErr := db.Exec(query, noteID)
 
 	if deleteErr != nil {
 		println("Delete note error: " + deleteErr.Error())
 	}
-
-	println(res.RowsAffected())
 
 	return deleteErr
 }

@@ -3,9 +3,9 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
-	"go_dm_api/api"
 	"go_dm_api/config"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"runtime"
 	"strconv"
@@ -85,10 +85,10 @@ type AuthForm struct {
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		api.StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	api.EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var formData AuthForm
 	json.NewDecoder(r.Body).Decode(&formData)
@@ -151,10 +151,10 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 
 func HandleLogout(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		api.StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	api.EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	expiredSessionCookie := &http.Cookie{
 		Domain:   config.Cfg().Server.Host,
@@ -188,7 +188,7 @@ func HandleLogout(w http.ResponseWriter, r *http.Request) {
 // UserAccessMiddleware To check that user is authenticated, but not specific permissions
 func UserAccessMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		api.EnableCORS(&w)
+		utils.EnableCORS(&w)
 
 		if r.Method == "OPTIONS" {
 			next.ServeHTTP(w, r)
@@ -224,7 +224,7 @@ func UserAccessMiddleware(next http.Handler) http.Handler {
 
 func CampaignAccessMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		api.EnableCORS(&w)
+		utils.EnableCORS(&w)
 
 		if r.Method == "OPTIONS" {
 			next.ServeHTTP(w, r)
@@ -285,10 +285,10 @@ func CampaignAccessMiddleware(next http.Handler) http.Handler {
 
 func HandleTokenRefresh(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		api.StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	api.EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	// verify refresh token
 	cookie, err := r.Cookie(dmRefreshString)
@@ -353,4 +353,36 @@ func HandleTokenRefresh(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"username": user.Username, "expires": expires.Format(time.RFC3339)})
+}
+
+func ExtractUserId(r *http.Request) int {
+	cookie, err := r.Cookie(dmTokenString)
+	if err != nil {
+		fmt.Println("(ExtractUserId) Could not parse cookie: ", err.Error())
+		return 0
+	}
+
+	token, err := jwt.ParseWithClaims(cookie.Value, &CustomClaims{}, func(t *jwt.Token) (any, error) {
+		return jwtSecretKey, nil
+	})
+
+	if err != nil || !token.Valid {
+		return 0
+	}
+
+	claims, ok := token.Claims.(*CustomClaims)
+
+	if !ok {
+		return 0
+	}
+
+	rawUserID := claims.UserID
+	userID, err := strconv.Atoi(rawUserID)
+
+	if err != nil {
+		fmt.Printf("Could not parse userID (%s): %s\n", rawUserID, err.Error())
+		return 0
+	}
+
+	return userID
 }

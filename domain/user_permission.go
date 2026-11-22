@@ -29,3 +29,13 @@ func HasPermission(userId int, campaignId int) bool {
 	}
 	return true
 }
+
+func CreateUserPermission(userId int, campaignId int) error {
+	db := DBConnection()
+	defer db.Close()
+
+	query := "INSERT INTO user_permission (user_id, campaign_id) VALUES (?, ?)"
+	_, insertErr := db.Exec(query, userId, campaignId)
+
+	return insertErr
+}

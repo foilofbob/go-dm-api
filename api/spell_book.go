@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -44,7 +45,7 @@ func GetSpellBookHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponse(w, BuildCompleteSpellBook(*spellBook))
+	utils.StandardResponse(w, BuildCompleteSpellBook(*spellBook))
 }
 
 func GetSpellBooksHandler(w http.ResponseWriter, r *http.Request) {
@@ -65,15 +66,15 @@ func GetSpellBooksHandler(w http.ResponseWriter, r *http.Request) {
 		completeSpellBooks = append(completeSpellBooks, BuildCompleteSpellBook(spellBook))
 	}
 
-	StandardResponse(w, completeSpellBooks)
+	utils.StandardResponse(w, completeSpellBooks)
 }
 
 func PostSpellBookHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var spellBook domain.SpellBook
 	json.NewDecoder(r.Body).Decode(&spellBook)
@@ -86,15 +87,15 @@ func PostSpellBookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newSpellBook)
+	utils.StandardResponse(w, newSpellBook)
 }
 
 func PutSpellBookHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var spellBook domain.SpellBook
 	json.NewDecoder(r.Body).Decode(&spellBook)
@@ -107,15 +108,15 @@ func PutSpellBookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, updatedSpellBook)
+	utils.StandardResponse(w, updatedSpellBook)
 }
 
 func DeleteSpellBookHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["spellBookId"]

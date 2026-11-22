@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 )
 
@@ -13,5 +14,5 @@ func ListCampaignSettingHandler(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 
-	StandardResponse(w, campaignSettings)
+	utils.StandardResponse(w, campaignSettings)
 }

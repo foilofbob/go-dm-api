@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -22,15 +23,15 @@ func GetLocationsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponseWithNotes(w, locations, campaignId, "LOCATION")
+	utils.StandardResponseWithNotes(w, locations, campaignId, "LOCATION")
 }
 
 func PostLocationHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var location domain.Location
 	json.NewDecoder(r.Body).Decode(&location)
@@ -42,15 +43,15 @@ func PostLocationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newLocation)
+	utils.StandardResponse(w, newLocation)
 }
 
 func PutLocationHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var location domain.Location
 	json.NewDecoder(r.Body).Decode(&location)
@@ -62,15 +63,15 @@ func PutLocationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, updatedLocation)
+	utils.StandardResponse(w, updatedLocation)
 }
 
 func DeleteLocationHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["locationId"]

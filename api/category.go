@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go_dm_api/domain"
+	"go_dm_api/utils"
 	"net/http"
 	"strconv"
 
@@ -22,15 +23,15 @@ func GetCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	StandardResponseWithNotes(w, categories, campaignId, "MISCELLANEOUS")
+	utils.StandardResponseWithNotes(w, categories, campaignId, "MISCELLANEOUS")
 }
 
 func PostCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var category domain.Category
 	json.NewDecoder(r.Body).Decode(&category)
@@ -42,15 +43,15 @@ func PostCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, newCategory)
+	utils.StandardResponse(w, newCategory)
 }
 
 func PutCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	var category domain.Category
 	json.NewDecoder(r.Body).Decode(&category)
@@ -62,15 +63,15 @@ func PutCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	StandardResponse(w, updatedCategory)
+	utils.StandardResponse(w, updatedCategory)
 }
 
 func DeleteCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
-		StandardResponse(w, nil)
+		utils.StandardResponse(w, nil)
 		return
 	}
-	EnableCORS(&w)
+	utils.EnableCORS(&w)
 
 	vars := mux.Vars(r)
 	idStr := vars["categoryId"]
