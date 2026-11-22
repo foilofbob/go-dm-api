@@ -154,10 +154,12 @@ func main() {
 
 	if config.Cfg().Server.Host == "localhost" {
 		log.Fatal(http.ListenAndServe(addr, r))
-	} else {
-		// TODO: How should look for deployment on Railway???
+	} else if config.Cfg().Server.Host == ".sidekickgm.local" {
 		certFile := "ssl/cert.pem"
 		keyFile := "ssl/key.pem"
 		log.Fatal(http.ListenAndServeTLS(addr, certFile, keyFile, r))
+	} else {
+		// TODO: How should this look for deployment on Railway???
+		log.Fatal(http.ListenAndServe(addr, r))
 	}
 }
