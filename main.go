@@ -160,6 +160,6 @@ func main() {
 		log.Fatal(http.ListenAndServeTLS(addr, certFile, keyFile, r))
 	} else {
 		// TODO: How should this look for deployment on Railway???
-		log.Fatal(http.ListenAndServe(addr, r))
+		log.Fatal(http.ListenAndServe("0.0.0.0"+addr, r))
 	}
 }
