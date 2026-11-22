@@ -148,7 +148,7 @@ func main() {
 	protected.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocation/{sublocationId:[0-9]+}", api.DeleteSublocationHandler).Methods("DELETE", "OPTIONS")
 
 	// Start the HTTP server
-	addr := config.Cfg().Server.Port
+	addr := config.Cfg().Server.Address
 	log.Println("Server listening on " + addr)
 
 	if config.Cfg().Server.Host == ".sidekickgm.local" {

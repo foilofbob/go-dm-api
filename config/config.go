@@ -15,9 +15,9 @@ type Config struct {
 }
 
 type Server struct {
-	Port   string `yaml:"port"`
-	Host   string `yaml:"host"`
-	Origin string `yaml:"origin"`
+	Address string `yaml:"Address"`
+	Host    string `yaml:"host"`
+	Origin  string `yaml:"origin"`
 }
 
 type Database struct {
@@ -35,9 +35,9 @@ type JWT struct {
 
 var currentConfig = Config{
 	Server: Server{
-		Port:   "123",
-		Host:   "localhost",
-		Origin: "http://localhost:8280",
+		Address: ":8080",
+		Host:    "localhost",
+		Origin:  "http://localhost:8280",
 	},
 	Database: Database{
 		Username: "db",
@@ -76,7 +76,7 @@ func InitConfig() {
 		log.Println("Initializing config from environment variables")
 		// For deployment read from environment variables
 		currentConfig.Server.Host = GetEnv("HOST", "localhost")
-		currentConfig.Server.Port = GetEnv("PORT", ":8090")
+		currentConfig.Server.Address = GetEnv("ADDRESS", ":8090")
 		currentConfig.Server.Origin = GetEnv("ORIGIN", "http://localhost:8280")
 		currentConfig.Database.Host = GetEnv("DB_HOST", "localhost")
 		currentConfig.Database.Port = GetEnv("DB_PORT", "3306")
