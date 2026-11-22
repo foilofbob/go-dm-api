@@ -59,6 +59,7 @@ func InitConfig() {
 	env := GetEnv("ENV", "local")
 
 	if env == "local" {
+		log.Println("Initializing config from local files")
 		// For local dev read from config
 		f, err := os.Open("config/config.yml")
 		if err != nil {
@@ -72,9 +73,10 @@ func InitConfig() {
 			log.Println(fmt.Sprintf("Error decoding config: %s", err.Error()))
 		}
 	} else {
+		log.Println("Initializing config from environment variables")
 		// For deployment read from environment variables
 		currentConfig.Server.Host = GetEnv("HOST", "localhost")
-		currentConfig.Server.Port = GetEnv("PORT", "8090")
+		currentConfig.Server.Port = GetEnv("PORT", ":8090")
 		currentConfig.Server.Origin = GetEnv("ORIGIN", "http://localhost:8280")
 		currentConfig.Database.Host = GetEnv("DB_HOST", "localhost")
 		currentConfig.Database.Port = GetEnv("DB_PORT", "3306")

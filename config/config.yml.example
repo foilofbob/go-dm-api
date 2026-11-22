@@ -3,11 +3,13 @@
 # Server configurations
 server:
   host: "localhost"
-  port: "8090"
-  cors: "8280"
+  port: ":8090"
+  origin: "http://localhost:8280"
 
 # Database credentials
 database:
+  host: "localhost"
+  port: "3306"
   user: "dm_tool"
   pass: "PASSWORD"
   db: "dm_campaign_manager"

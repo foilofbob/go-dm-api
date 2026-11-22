@@ -148,18 +148,14 @@ func main() {
 	protected.HandleFunc("/campaign/{campaignId:[0-9]+}/sublocation/{sublocationId:[0-9]+}", api.DeleteSublocationHandler).Methods("DELETE", "OPTIONS")
 
 	// Start the HTTP server
-	log.Println("Server listening on :" + config.Cfg().Server.Port)
+	addr := config.Cfg().Server.Port
+	log.Println("Server listening on " + addr)
 
-	addr := ":" + config.Cfg().Server.Port
-
-	if config.Cfg().Server.Host == "localhost" {
-		log.Fatal(http.ListenAndServe(addr, r))
-	} else if config.Cfg().Server.Host == ".sidekickgm.local" {
+	if config.Cfg().Server.Host == ".sidekickgm.local" {
 		certFile := "ssl/cert.pem"
 		keyFile := "ssl/key.pem"
 		log.Fatal(http.ListenAndServeTLS(addr, certFile, keyFile, r))
 	} else {
-		// TODO: How should this look for deployment on Railway???
-		log.Fatal(http.ListenAndServe("0.0.0.0"+addr, r))
+		log.Fatal(http.ListenAndServe(addr, r))
 	}
 }
