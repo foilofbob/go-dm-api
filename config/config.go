@@ -35,7 +35,7 @@ type JWT struct {
 
 var currentConfig = Config{
 	Server: Server{
-		Address: ":8080",
+		Address: ":8090",
 		Host:    "localhost",
 		Origin:  "http://localhost:8280",
 	},

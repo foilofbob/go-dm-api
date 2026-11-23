@@ -66,8 +66,9 @@ func GetCampaignHandler(w http.ResponseWriter, r *http.Request) {
 	utils.StandardResponse(w, completeCampaign{Campaign: *campaign, Months: months, WeekDays: weekDays, CalendarCycles: calendarCycles, CalendarCycleOffsets: calendarCycleOffsets, CalendarEvents: calendarEvents})
 }
 
-func ListCampaignHandler(w http.ResponseWriter, _ *http.Request) {
-	campaigns, err := domain.ListCampaigns()
+func ListCampaignHandler(w http.ResponseWriter, r *http.Request) {
+	userID := auth.ExtractUserId(r)
+	campaigns, err := domain.ListCampaigns(userID)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error fetching campaigns: %s", err.Error()), http.StatusNotFound)
 		return

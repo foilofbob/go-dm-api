@@ -22,8 +22,9 @@ func GetCampaign(id int) (*Campaign, error) {
 	return campaign, nil
 }
 
-func ListCampaigns() ([]Campaign, error) {
-	rows, err := GetAll("campaign")
+func ListCampaigns(userID int) ([]Campaign, error) {
+	query := "SELECT c.* FROM campaign c LEFT JOIN user_permission up ON up.campaign_id = c.id WHERE user_permission.user_id = ?"
+	rows, err := DBQuery(query, userID)
 	if err != nil {
 		return nil, err
 	}
